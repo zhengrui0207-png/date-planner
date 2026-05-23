@@ -1,0 +1,1439 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>💕 约会地点推荐</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  :root {
+    --pink-light: #fff0f5;
+    --pink: #ff6b9d;
+    --pink-deep: #e91e63;
+    --pink-gradient: linear-gradient(135deg, #fff0f5 0%, #ffd6e7 50%, #ffb3c6 100%);
+    --pink-btn: linear-gradient(135deg, #ff6b9d, #ff8fab);
+    --shadow: 0 4px 20px rgba(255,107,157,0.25);
+    --radius: 16px;
+  }
+
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, 'PingFang SC', 'Helvetica Neue', sans-serif;
+    background: var(--pink-gradient);
+    min-height: 100vh;
+    color: #333;
+    overflow-x: hidden;
+  }
+
+  .container {
+    max-width: 480px;
+    margin: 0 auto;
+    padding: 20px 16px 40px;
+    min-height: 100vh;
+  }
+
+  /* Header */
+  .header {
+    text-align: center;
+    padding: 30px 0 20px;
+  }
+  .header h1 {
+    font-size: 28px;
+    color: var(--pink-deep);
+    margin-bottom: 8px;
+    text-shadow: 0 2px 10px rgba(255,107,157,0.3);
+  }
+  .header p {
+    font-size: 14px;
+    color: #888;
+  }
+  .heart-icon {
+    font-size: 40px;
+    animation: pulse 2s ease-in-out infinite;
+  }
+  @keyframes pulse {
+    0%, 100% { transform: scale(1); }
+    50% { transform: scale(1.1); }
+  }
+
+  /* Step Indicator */
+  .step-indicator {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 8px;
+    margin: 20px 0;
+  }
+  .step-dot {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background: #ddd;
+    transition: all 0.3s;
+  }
+  .step-dot.active {
+    background: var(--pink);
+    width: 24px;
+    border-radius: 5px;
+  }
+  .step-dot.done {
+    background: var(--pink-deep);
+  }
+
+  /* Card */
+  .card {
+    background: rgba(255,255,255,0.95);
+    border-radius: var(--radius);
+    box-shadow: var(--shadow);
+    padding: 24px 20px;
+    margin-bottom: 16px;
+    backdrop-filter: blur(10px);
+  }
+
+  /* Screens */
+  .screen {
+    display: none;
+    animation: fadeIn 0.4s ease;
+  }
+  .screen.active {
+    display: block;
+  }
+
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  /* Inputs */
+  .input-group {
+    margin-bottom: 16px;
+  }
+  .input-group label {
+    display: block;
+    font-size: 14px;
+    color: var(--pink-deep);
+    font-weight: 600;
+    margin-bottom: 8px;
+  }
+  .input-group input {
+    width: 100%;
+    padding: 14px 16px;
+    border: 2px solid #ffd6e7;
+    border-radius: 12px;
+    font-size: 16px;
+    transition: all 0.3s;
+    background: #fff;
+  }
+  .input-group input:focus {
+    outline: none;
+    border-color: var(--pink);
+    box-shadow: 0 0 0 3px rgba(255,107,157,0.15);
+  }
+  .input-group .hint {
+    font-size: 12px;
+    color: #aaa;
+    margin-top: 6px;
+  }
+
+  /* Buttons */
+  .btn {
+    display: block;
+    width: 100%;
+    padding: 16px;
+    background: var(--pink-btn);
+    color: white;
+    border: none;
+    border-radius: 12px;
+    font-size: 17px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s;
+    box-shadow: 0 4px 15px rgba(255,107,157,0.4);
+  }
+  .btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(255,107,157,0.5);
+  }
+  .btn:active {
+    transform: translateY(0);
+  }
+  .btn:disabled {
+    background: #ddd;
+    cursor: not-allowed;
+    box-shadow: none;
+  }
+  .btn-secondary {
+    background: white;
+    color: var(--pink-deep);
+    border: 2px solid var(--pink);
+    box-shadow: none;
+  }
+  .btn-secondary:hover {
+    background: var(--pink-light);
+  }
+
+  /* Preference Categories */
+  .pref-section {
+    margin-bottom: 24px;
+  }
+  .pref-title {
+    font-size: 15px;
+    color: var(--pink-deep);
+    margin-bottom: 12px;
+    padding-left: 8px;
+    border-left: 3px solid var(--pink);
+  }
+  .pref-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+  }
+  .pref-item {
+    padding: 12px 14px;
+    background: var(--pink-light);
+    border: 2px solid transparent;
+    border-radius: 10px;
+    font-size: 14px;
+    text-align: center;
+    cursor: pointer;
+    transition: all 0.3s;
+  }
+  .pref-item:hover {
+    border-color: var(--pink);
+  }
+  .pref-item.selected {
+    background: white;
+    border-color: var(--pink);
+    color: var(--pink-deep);
+    font-weight: 600;
+    box-shadow: 0 2px 10px rgba(255,107,157,0.2);
+  }
+  .pref-item.disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+
+  /* Meeting Strategy Cards */
+  .strategy-cards {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    margin-top: 16px;
+  }
+  .strategy-card {
+    padding: 18px 16px;
+    background: var(--pink-light);
+    border: 2px solid transparent;
+    border-radius: 14px;
+    cursor: pointer;
+    transition: all 0.3s;
+    display: flex;
+    align-items: center;
+    gap: 14px;
+  }
+  .strategy-card:hover {
+    border-color: var(--pink);
+    background: #fff;
+  }
+  .strategy-card.selected {
+    background: white;
+    border-color: var(--pink);
+    box-shadow: 0 2px 12px rgba(255,107,157,0.2);
+  }
+  .strategy-icon {
+    font-size: 32px;
+    flex-shrink: 0;
+  }
+  .strategy-text {
+    flex: 1;
+  }
+  .strategy-name {
+    font-size: 16px;
+    font-weight: 700;
+    color: var(--pink-deep);
+    margin-bottom: 4px;
+  }
+  .strategy-desc {
+    font-size: 13px;
+    color: #888;
+    line-height: 1.5;
+  }
+  .strategy-check {
+    width: 22px;
+    height: 22px;
+    border-radius: 50%;
+    border: 2px solid #ddd;
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 12px;
+    color: white;
+    transition: all 0.3s;
+  }
+  .strategy-card.selected .strategy-check {
+    background: var(--pink);
+    border-color: var(--pink);
+  }
+
+  /* Results */
+  .result-card {
+    background: white;
+    border-radius: var(--radius);
+    padding: 20px;
+    margin-bottom: 16px;
+    border: 2px solid #ffd6e7;
+    transition: all 0.3s;
+  }
+  .result-card:hover {
+    border-color: var(--pink);
+    transform: translateY(-2px);
+  }
+  .result-header {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 12px;
+  }
+  .result-icon {
+    width: 50px;
+    height: 50px;
+    background: var(--pink-light);
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 24px;
+  }
+  .result-name {
+    font-size: 18px;
+    font-weight: 700;
+    color: #333;
+  }
+  .result-rating {
+    font-size: 13px;
+    color: #ff9500;
+    margin-top: 2px;
+  }
+  .result-address {
+    font-size: 13px;
+    color: #888;
+    margin-bottom: 6px;
+    display: flex;
+    align-items: flex-start;
+    gap: 4px;
+    flex-direction: column;
+  }
+  .result-coords {
+    font-size: 11px;
+    color: #bbb;
+    margin-bottom: 10px;
+    padding-left: 2px;
+  }
+  .result-commute {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    margin: 8px 0 10px;
+  }
+  .commute-pill {
+    padding: 5px 8px;
+    background: #fff7fa;
+    border: 1px solid #ffd6e7;
+    border-radius: 999px;
+    font-size: 12px;
+    color: #666;
+  }
+  .commute-pill.primary {
+    color: var(--pink-deep);
+    border-color: var(--pink);
+    font-weight: 600;
+  }
+  .result-reason {
+    font-size: 14px;
+    color: var(--pink-deep);
+    background: var(--pink-light);
+    padding: 12px;
+    border-radius: 10px;
+    line-height: 1.6;
+  }
+  .result-reason::before {
+    content: "💡 ";
+  }
+
+  /* Route Info */
+  .route-section {
+    background: white;
+    border-radius: var(--radius);
+    padding: 20px;
+    margin-bottom: 16px;
+  }
+  .route-user {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 14px;
+    background: var(--pink-light);
+    border-radius: 12px;
+    margin-bottom: 12px;
+  }
+  .route-avatar {
+    width: 40px;
+    height: 40px;
+    background: var(--pink);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-weight: 700;
+    font-size: 18px;
+  }
+  .route-info {
+    flex: 1;
+  }
+  .route-label {
+    font-size: 12px;
+    color: #888;
+  }
+  .route-value {
+    font-size: 15px;
+    font-weight: 600;
+    color: #333;
+  }
+  .route-detail {
+    font-size: 13px;
+    color: var(--pink-deep);
+    margin-top: 4px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+  .route-transit {
+    padding: 10px;
+    background: #f8f8f8;
+    border-radius: 8px;
+    margin-top: 8px;
+    font-size: 13px;
+    color: #666;
+  }
+  .route-transit span {
+    display: inline-block;
+    margin-right: 8px;
+  }
+
+  /* Loading */
+  .loading {
+    text-align: center;
+    padding: 40px 20px;
+  }
+  .loading-icon {
+    font-size: 48px;
+    animation: bounce 1s ease-in-out infinite;
+  }
+  @keyframes bounce {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-10px); }
+  }
+  .loading-text {
+    font-size: 16px;
+    color: var(--pink-deep);
+    margin-top: 16px;
+  }
+  .loading-sub {
+    font-size: 13px;
+    color: #aaa;
+    margin-top: 8px;
+  }
+
+  /* Footer */
+  .footer-tip {
+    text-align: center;
+    font-size: 12px;
+    color: #bbb;
+    margin-top: 20px;
+    padding-bottom: 20px;
+  }
+
+  /* Error */
+  .error-msg {
+    color: #e91e63;
+    font-size: 13px;
+    margin-top: 8px;
+    padding: 10px;
+    background: #fff0f5;
+    border-radius: 8px;
+  }
+  .api-note {
+    font-size: 12px;
+    color: #999;
+    line-height: 1.6;
+    margin-top: 10px;
+  }
+  .route-link {
+    display: inline-block;
+    margin-top: 8px;
+    color: var(--pink-deep);
+    font-size: 13px;
+    font-weight: 600;
+    text-decoration: none;
+  }
+
+  /* Location Summary */
+  .location-summary {
+    background: var(--pink-light);
+    border-radius: 12px;
+    padding: 14px;
+    margin-bottom: 16px;
+    font-size: 13px;
+    color: #666;
+    line-height: 1.8;
+  }
+  .location-summary strong {
+    color: var(--pink-deep);
+  }
+</style>
+</head>
+<body>
+<div class="container">
+  <div class="header">
+    <div class="heart-icon">💕</div>
+    <h1>约会地点推荐</h1>
+    <p id="step-title">找到你们最棒的约会地点</p>
+  </div>
+
+  <div class="step-indicator">
+    <div class="step-dot active" id="dot1"></div>
+    <div class="step-dot" id="dot2"></div>
+    <div class="step-dot" id="dot3"></div>
+    <div class="step-dot" id="dot4"></div>
+    <div class="step-dot" id="dot5"></div>
+  </div>
+
+  <!-- Step 1: Location Input -->
+  <div class="screen active" id="screen1">
+    <div class="card">
+      <div class="input-group">
+        <label>👤 用户A 的位置</label>
+        <input type="text" id="locationA" placeholder="例如:北京市石景山区古城" />
+        <div class="hint">输入城市、区县或具体地址</div>
+      </div>
+      <div class="input-group">
+        <label>👤 用户B 的位置</label>
+        <input type="text" id="locationB" placeholder="例如:北京市朝阳区望京南" />
+        <div class="hint">输入城市、区县或具体地址</div>
+      </div>
+    </div>
+    <button class="btn" id="btnNext1" onclick="goToStep(2)">下一步 →</button>
+  </div>
+
+  <!-- Step 2: Meeting Point Strategy -->
+  <div class="screen" id="screen2">
+    <div class="card">
+      <p style="font-size:15px;color:#888;margin-bottom:6px;">📍 约会地点偏向</p>
+      <p style="font-size:13px;color:#aaa;margin-bottom:16px;">选择约会地点的参考基准</p>
+
+      <div class="location-summary" id="locationSummary">
+        用户A: <strong id="summaryA"></strong><br>
+        用户B: <strong id="summaryB"></strong>
+      </div>
+
+      <div class="strategy-cards">
+        <div class="strategy-card selected" id="strategy-center" onclick="selectStrategy('center')">
+          <div class="strategy-icon">🎯</div>
+          <div class="strategy-text">
+            <div class="strategy-name">折中位置</div>
+            <div class="strategy-desc">选在两人之间的中间点,双方路程最均衡</div>
+          </div>
+          <div class="strategy-check">✓</div>
+        </div>
+
+        <div class="strategy-card" id="strategy-nearA" onclick="selectStrategy('nearA')">
+          <div class="strategy-icon">🚶‍♂️</div>
+          <div class="strategy-text">
+            <div class="strategy-name">离 A 近一点</div>
+            <div class="strategy-desc">A 少走一点路,B 多走一点,更照顾 A 的时间</div>
+          </div>
+          <div class="strategy-check"></div>
+        </div>
+
+        <div class="strategy-card" id="strategy-nearB" onclick="selectStrategy('nearB')">
+          <div class="strategy-icon">🚶‍♀️</div>
+          <div class="strategy-text">
+            <div class="strategy-name">离 B 近一点</div>
+            <div class="strategy-desc">B 少走一点路,A 多走一点,更照顾 B 的时间</div>
+          </div>
+          <div class="strategy-check"></div>
+        </div>
+      </div>
+    </div>
+    <button class="btn btn-secondary" onclick="goToStep(1)">← 上一步</button>
+    <button class="btn" onclick="goToStep(3)" style="margin-top:12px;">下一步 →</button>
+  </div>
+
+  <!-- Step 3: Preference -->
+  <div class="screen" id="screen3">
+    <div class="card">
+      <p style="font-size:15px;color:#888;margin-bottom:20px;">💝 选择你们喜欢的约会风格</p>
+
+      <div class="pref-section">
+        <div class="pref-title">一、轻松日常款</div>
+        <div class="pref-grid">
+          <div class="pref-item" onclick="togglePref(this)">商场逛街</div>
+          <div class="pref-item" onclick="togglePref(this)">奶茶咖啡店</div>
+          <div class="pref-item" onclick="togglePref(this)">小吃街</div>
+          <div class="pref-item" onclick="togglePref(this)">公园散步</div>
+          <div class="pref-item" onclick="togglePref(this)" style="grid-column:span 2;">酒吧谈心</div>
+        </div>
+      </div>
+
+      <div class="pref-section">
+        <div class="pref-title">二、甜蜜浪漫款</div>
+        <div class="pref-grid">
+          <div class="pref-item" onclick="togglePref(this)">看电影</div>
+          <div class="pref-item" onclick="togglePref(this)">西餐厅</div>
+          <div class="pref-item" onclick="togglePref(this)" style="grid-column:span 2;">江边/湖边看日落</div>
+          <div class="pref-item" onclick="togglePref(this)" style="grid-column:span 2;">夜景天台观景</div>
+        </div>
+      </div>
+
+      <div class="pref-section">
+        <div class="pref-title">三,好玩互动款</div>
+        <div class="pref-grid">
+          <div class="pref-item" onclick="togglePref(this)">密室逃脱</div>
+          <div class="pref-item" onclick="togglePref(this)">电玩城</div>
+          <div class="pref-item" onclick="togglePref(this)">DIY手工</div>
+          <div class="pref-item" onclick="togglePref(this)">剧本杀</div>
+          <div class="pref-item" onclick="togglePref(this)">卡丁车</div>
+          <div class="pref-item" onclick="togglePref(this)">轮滑/射箭</div>
+          <div class="pref-item" onclick="togglePref(this)" style="grid-column:span 2;">棋牌/桌游</div>
+        </div>
+      </div>
+    </div>
+    <button class="btn btn-secondary" onclick="goToStep(2)">← 上一步</button>
+    <button class="btn" id="btnNext3" onclick="goToStep(4)" style="margin-top:12px;">开始推荐 →</button>
+  </div>
+
+  <!-- Step 4: Loading/Results -->
+  <div class="screen" id="screen4">
+    <div id="loadingState">
+      <div class="loading">
+        <div class="loading-icon">🔍</div>
+        <div class="loading-text">正在搜索最佳约会地点...</div>
+        <div class="loading-sub" id="loadingSub">综合考虑双方位置和偏好</div>
+      </div>
+    </div>
+    <div id="resultState" style="display:none;">
+      <div id="recommendationList"></div>
+      <button class="btn btn-secondary" onclick="goToStep(3)" style="margin-top:16px;">← 重新选择</button>
+      <button class="btn" id="btnNext4" onclick="goToStep(5)" style="margin-top:12px;">查看路线 →</button>
+    </div>
+  </div>
+
+  <!-- Step 5: Route Planning -->
+  <div class="screen" id="screen5">
+    <div id="routeLoadingState">
+      <div class="loading">
+        <div class="loading-icon">🗺️</div>
+        <div class="loading-text">正在规划路线...</div>
+        <div class="loading-sub">计算双方的出行方案</div>
+      </div>
+    </div>
+    <div id="routeResultState" style="display:none;">
+      <div class="route-user">
+        <div class="route-avatar">A</div>
+        <div class="route-info">
+          <div class="route-label">用户A 出发</div>
+          <div class="route-value" id="routeALocation"></div>
+          <div class="route-detail" id="routeADetail"></div>
+        </div>
+      </div>
+      <div class="route-user">
+        <div class="route-avatar">B</div>
+        <div class="route-info">
+          <div class="route-label">用户B 出发</div>
+          <div class="route-value" id="routeBLocation"></div>
+          <div class="route-detail" id="routeBDetail"></div>
+        </div>
+      </div>
+      <div id="routeTransitInfo"></div>
+      <button class="btn btn-secondary" onclick="goToStep(4)" style="margin-top:16px;">← 查看其他推荐</button>
+      <button class="btn" onclick="restart()" style="margin-top:12px;">🔄 重新开始</button>
+    </div>
+  </div>
+
+  <div class="footer-tip">💕 愿你们有个美好的约会</div>
+</div>
+
+<script>
+// Config
+const BAIDU_AK = '7edltr8Ks0Nqaw4RfK7avH4GF7aq6Kvm';
+
+// 偏好类型 → 百度地图地点检索关键词
+const PREF_SEARCH_KEYWORDS = {
+  '商场逛街': '购物中心',
+  '奶茶咖啡店': '咖啡厅',
+  '小吃街': '小吃街',
+  '公园散步': '公园',
+  '酒吧谈心': '酒吧',
+  '看电影': '电影院',
+  '西餐厅': '西餐厅',
+  '江边/湖边看日落': '公园',
+  '夜景天台观景': '观景台',
+  '密室逃脱': '密室逃脱',
+  '电玩城': '电玩城',
+  'DIY手工': '手工DIY',
+  '剧本杀': '剧本杀',
+  '卡丁车': '卡丁车',
+  '轮滑/射箭': '射箭馆',
+  '棋牌/桌游': '桌游吧'
+};
+
+// 偏好图标
+const PREF_ICONS = {
+  '商场逛街': '🛍️', '奶茶咖啡店': '☕', '小吃街': '🍡', '公园散步': '🌳',
+  '酒吧谈心': '🍷', '看电影': '🎬', '西餐厅': '🍽️',
+  '江边/湖边看日落': '🌅', '夜景天台观景': '🌃',
+  '密室逃脱': '🔐', '电玩城': '🎮', 'DIY手工': '🎨',
+  '剧本杀': '🎭', '卡丁车': '🏎️', '轮滑/射箭': '🎯', '棋牌/桌游': '🀄'
+};
+
+// JSONP 工具：百度 Web 服务在浏览器里没有稳定 CORS 响应，静态 HTML 必须走 JSONP。
+let jsonpId = 0;
+function jsonp(url, timeoutMs = 8000) {
+  return new Promise((resolve, reject) => {
+    const cbName = '__bmap_cb_' + (++jsonpId) + '_' + Date.now();
+    const script = document.createElement('script');
+    let timer = null;
+    const cleanup = () => {
+      if (timer) clearTimeout(timer);
+      try { delete window[cbName]; } catch (_) { window[cbName] = undefined; }
+      if (script.parentNode) script.parentNode.removeChild(script);
+    };
+    window[cbName] = (data) => {
+      cleanup();
+      resolve(data);
+    };
+    script.onerror = () => {
+      cleanup();
+      reject(new Error('JSONP 请求失败: ' + url));
+    };
+    timer = setTimeout(() => {
+      cleanup();
+      reject(new Error('JSONP 请求超时'));
+    }, timeoutMs);
+    const sep = url.includes('?') ? '&' : '?';
+    script.src = url + sep + 'callback=' + cbName;
+    document.head.appendChild(script);
+  });
+}
+
+function buildBaiduApiUrl(path, params) {
+  const url = new URL(path, 'https://api.map.baidu.com/');
+  Object.entries({ ...params, output: 'json', ak: BAIDU_AK }).forEach(([key, value]) => {
+    if (value !== undefined && value !== null && value !== '') {
+      url.searchParams.set(key, value);
+    }
+  });
+  return url.toString();
+}
+
+async function baiduApi(path, params, timeoutMs = 10000) {
+  const url = buildBaiduApiUrl(path, params);
+  const data = await jsonp(url, timeoutMs);
+  if (!data) throw new Error('百度地图接口未返回数据');
+  if (data.status !== 0) {
+    const msg = data.message || data.msg || data.status;
+    throw new Error(`百度地图接口返回异常: ${msg}`);
+  }
+  return data;
+}
+
+function normalizeLocation(loc) {
+  if (!loc) return null;
+  const lat = parseFloat(loc.lat);
+  const lng = parseFloat(loc.lng);
+  return Number.isFinite(lat) && Number.isFinite(lng) ? { lat, lng } : null;
+}
+
+// State
+let state = {
+  locationA: '',
+  locationB: '',
+  strategy: 'center', // 'center' | 'nearA' | 'nearB'
+  selectedPrefs: [],
+  recommendations: [],
+  selectedPlace: null,
+  coordsA: null,
+  coordsB: null,
+  coordsDest: null,
+  targetCoords: null,
+  apiWarning: ''
+};
+
+// Strategy selection
+function selectStrategy(strategy) {
+  state.strategy = strategy;
+  document.querySelectorAll('.strategy-card').forEach(card => {
+    card.classList.remove('selected');
+    card.querySelector('.strategy-check').textContent = '';
+  });
+  const selectedCard = document.getElementById('strategy-' + strategy);
+  selectedCard.classList.add('selected');
+  selectedCard.querySelector('.strategy-check').textContent = '✓';
+}
+
+// Preference selection
+function togglePref(el) {
+  el.classList.toggle('selected');
+}
+
+// Step navigation
+function goToStep(step) {
+  if (step === 2) {
+    state.locationA = document.getElementById('locationA').value.trim();
+    state.locationB = document.getElementById('locationB').value.trim();
+    if (!state.locationA || !state.locationB) {
+      alert('请输入双方的位置信息');
+      return;
+    }
+    // Update location summary
+    document.getElementById('summaryA').textContent = state.locationA;
+    document.getElementById('summaryB').textContent = state.locationB;
+  }
+
+  if (step === 3) {
+    state.locationA = document.getElementById('locationA').value.trim();
+    state.locationB = document.getElementById('locationB').value.trim();
+    if (!state.locationA || !state.locationB) {
+      alert('请输入双方的位置信息');
+      return;
+    }
+  }
+
+  if (step === 4) {
+    const selected = document.querySelectorAll('.pref-item.selected');
+    if (selected.length === 0) {
+      alert('请至少选择一个偏好类型');
+      return;
+    }
+    state.selectedPrefs = Array.from(selected).map(el => el.textContent);
+  }
+
+  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+  document.getElementById('screen' + step).classList.add('active');
+
+  document.querySelectorAll('.step-dot').forEach((dot, i) => {
+    dot.classList.remove('active', 'done');
+    if (i + 1 < step) dot.classList.add('done');
+    if (i + 1 === step) dot.classList.add('active');
+  });
+
+  const titles = [
+    '', '输入你们的位置', '选择地点偏向', '选择约会偏好', '精选推荐', '规划出行路线'
+  ];
+  document.getElementById('step-title').textContent = titles[step] || '';
+
+  if (step === 4) {
+    loadRecommendations();
+  }
+  if (step === 5) {
+    loadRoutes();
+  }
+}
+
+// 从地址中提取城市名，提高地理编码与检索准确率
+function extractCity(address) {
+  const m = address.match(/([\u4e00-\u9fa5]+?市)/);
+  return m ? m[1] : '';
+}
+
+function getSearchCity() {
+  return extractCity(state.locationA) || extractCity(state.locationB) || '北京市';
+}
+
+// 地理编码（Web Service API + JSONP）
+async function geocode(address) {
+  try {
+    const city = extractCity(address) || getSearchCity();
+    const data = await baiduApi('/geocoding/v3/', { address, city });
+    const location = normalizeLocation(data.result?.location);
+    if (location) {
+      return location;
+    }
+    console.warn('[geocode] failed:', address, data);
+    return null;
+  } catch (e) {
+    console.warn('[geocode] error:', address, e);
+    return null;
+  }
+}
+
+// Calculate target coords based on strategy
+function calcTargetCoords(coordsA, coordsB) {
+  const s = state.strategy;
+  if (s === 'center') {
+    return {
+      lat: (coordsA.lat + coordsB.lat) / 2,
+      lng: (coordsA.lng + coordsB.lng) / 2
+    };
+  } else if (s === 'nearA') {
+    // 70% A, 30% B
+    return {
+      lat: coordsA.lat * 0.7 + coordsB.lat * 0.3,
+      lng: coordsA.lng * 0.7 + coordsB.lng * 0.3
+    };
+  } else {
+    // nearB: 30% A, 70% B
+    return {
+      lat: coordsA.lat * 0.3 + coordsB.lat * 0.7,
+      lng: coordsA.lng * 0.3 + coordsB.lng * 0.7
+    };
+  }
+}
+
+// 周边地点检索（Web Service API + JSONP）
+async function searchPlaces(query, lat, lng, radius = 3000) {
+  try {
+    const data = await baiduApi('/place/v2/search', {
+      query,
+      location: `${lat},${lng}`,
+      radius,
+      region: getSearchCity(),
+      radius_limit: true,
+      scope: 2,
+      page_size: 20,
+      coord_type: 3
+    });
+    if (Array.isArray(data.results)) {
+      return data.results
+        .map(p => ({ raw: p, location: normalizeLocation(p.location) }))
+        .filter(p => p.location)
+        .map(({ raw: p, location }) => ({
+          uid: p.uid,
+          name: p.name,
+          address: p.address,
+          location,
+          province: p.province || '',
+          city: p.city || '',
+          area: p.area || '',
+          telephone: p.telephone || '',
+          overall_rating: p.detail_info?.overall_rating || null,
+          price: p.detail_info?.price || '',
+          tag: p.detail_info?.tag || '',
+          detail_url: p.detail_info?.detail_url || ''
+        }));
+    }
+    console.warn('[searchPlaces] failed:', query, data);
+    return [];
+  } catch (e) {
+    console.warn('[searchPlaces] error:', query, e);
+    return [];
+  }
+}
+
+function getPlaceSearchCenters() {
+  if (state.strategy === 'nearA' && state.coordsA) {
+    return [
+      { coords: state.coordsA, radius: 3000 },
+      { coords: state.coordsA, radius: 8000 },
+      { coords: state.targetCoords, radius: 8000 }
+    ];
+  }
+  if (state.strategy === 'nearB' && state.coordsB) {
+    return [
+      { coords: state.coordsB, radius: 3000 },
+      { coords: state.coordsB, radius: 8000 },
+      { coords: state.targetCoords, radius: 8000 }
+    ];
+  }
+  return [
+    { coords: state.targetCoords, radius: 3000 },
+    { coords: state.targetCoords, radius: 8000 }
+  ];
+}
+
+// 带关键词映射、策略搜索中心与扩大半径的搜索
+async function searchPlacesWithFallback(pref) {
+  const keyword = PREF_SEARCH_KEYWORDS[pref] || pref;
+  const centers = getPlaceSearchCenters().filter(item => item.coords);
+  let results = [];
+
+  for (const item of centers) {
+    results = await searchPlaces(keyword, item.coords.lat, item.coords.lng, item.radius);
+    if (results.length) break;
+  }
+
+  if (results.length === 0 && keyword !== pref) {
+    for (const item of centers) {
+      results = await searchPlaces(pref, item.coords.lat, item.coords.lng, item.radius);
+      if (results.length) break;
+    }
+  }
+
+  // 标注偏好来源
+  return results.map(r => ({ ...r, _prefIcon: PREF_ICONS[pref] || '📍' }));
+}
+
+// Haversine distance in km
+function haversineDistance(lat1, lng1, lat2, lng2) {
+  const R = 6371;
+  const dLat = (lat2 - lat1) * Math.PI / 180;
+  const dLng = (lng2 - lng1) * Math.PI / 180;
+  const a = Math.sin(dLat/2)**2 + Math.cos(lat1*Math.PI/180)*Math.cos(lat2*Math.PI/180)*Math.sin(dLng/2)**2;
+  return R * 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
+}
+
+function formatDistance(km) {
+  if (!Number.isFinite(km)) return '-';
+  return km < 1 ? `${Math.round(km * 1000)}m` : `${km.toFixed(km < 10 ? 1 : 0)}km`;
+}
+
+function getRatingValue(place) {
+  const rating = parseFloat(place.overall_rating || place.rating || 4);
+  return Number.isFinite(rating) ? rating : 4;
+}
+
+function enrichPlaceMetrics(place) {
+  const loc = place.location || normalizeLocation({ lat: place.lat, lng: place.lng });
+  const distA = state.coordsA && loc
+    ? haversineDistance(state.coordsA.lat, state.coordsA.lng, loc.lat, loc.lng)
+    : Infinity;
+  const distB = state.coordsB && loc
+    ? haversineDistance(state.coordsB.lat, state.coordsB.lng, loc.lat, loc.lng)
+    : Infinity;
+  const targetDistance = state.targetCoords && loc
+    ? haversineDistance(state.targetCoords.lat, state.targetCoords.lng, loc.lat, loc.lng)
+    : Infinity;
+  const balanceGap = Math.abs(distA - distB);
+  return { ...place, location: loc, distA, distB, distance: targetDistance, balanceGap };
+}
+
+function getStrategyScore(place) {
+  const ratingScore = getRatingValue(place) * 1.2;
+  if (state.strategy === 'nearA') {
+    return ratingScore - place.distA * 8 - place.distance * 0.6;
+  }
+  if (state.strategy === 'nearB') {
+    return ratingScore - place.distB * 8 - place.distance * 0.6;
+  }
+  return ratingScore - place.distance * 5 - place.balanceGap * 1.5;
+}
+
+function buildPlaceReason(place) {
+  if (place.reason) return place.reason;
+  if (state.strategy === 'nearA') {
+    if (place.routeA) {
+      return `优先照顾 A 的真实路线时间，A 约 ${place.routeA.duration} 分钟到达，B 距离约 ${formatDistance(place.distB)}。`;
+    }
+    return `优先照顾 A 的路程，A 距离约 ${formatDistance(place.distA)}，B 距离约 ${formatDistance(place.distB)}。`;
+  }
+  if (state.strategy === 'nearB') {
+    if (place.routeB) {
+      return `优先照顾 B 的真实路线时间，B 约 ${place.routeB.duration} 分钟到达，A 距离约 ${formatDistance(place.distA)}。`;
+    }
+    return `优先照顾 B 的路程，B 距离约 ${formatDistance(place.distB)}，A 距离约 ${formatDistance(place.distA)}。`;
+  }
+  return `更接近双方折中位置，A 距离约 ${formatDistance(place.distA)}，B 距离约 ${formatDistance(place.distB)}。`;
+}
+
+function rankPlaces(places) {
+  if (!state.coordsA || !state.coordsB) {
+    return places
+      .map(p => ({ ...p, location: p.location || normalizeLocation({ lat: p.lat, lng: p.lng }) }))
+      .map(p => ({ ...p, distA: NaN, distB: NaN, distance: NaN, balanceGap: NaN }));
+  }
+
+  return places
+    .map(enrichPlaceMetrics)
+    .filter(p => p.location && Number.isFinite(p.distA) && Number.isFinite(p.distB))
+    .map(p => ({ ...p, strategyScore: getStrategyScore(p), reason: buildPlaceReason(p) }))
+    .sort((a, b) => b.strategyScore - a.strategyScore);
+}
+
+async function refineNearSideByRoute(places) {
+  if (state.strategy !== 'nearA' && state.strategy !== 'nearB') return places;
+
+  const origin = state.strategy === 'nearA' ? state.coordsA : state.coordsB;
+  if (!origin) return places;
+
+  const candidates = places.slice(0, 8);
+  const rest = places.slice(8);
+  const enriched = await Promise.all(candidates.map(async place => {
+    try {
+      const route = await getTransitRoute(origin, place.location);
+      if (!route) return place;
+      const routeKey = state.strategy === 'nearA' ? 'routeA' : 'routeB';
+      return {
+        ...place,
+        [routeKey]: route,
+        primaryDuration: route.duration,
+        reason: buildPlaceReason({ ...place, [routeKey]: route })
+      };
+    } catch (e) {
+      console.warn('[route refine] failed:', place.name, e);
+      return place;
+    }
+  }));
+
+  enriched.sort((a, b) => {
+    const durationA = Number.isFinite(a.primaryDuration) ? a.primaryDuration : Infinity;
+    const durationB = Number.isFinite(b.primaryDuration) ? b.primaryDuration : Infinity;
+    if (durationA !== durationB) return durationA - durationB;
+    return b.strategyScore - a.strategyScore;
+  });
+
+  return [...enriched, ...rest];
+}
+
+// Load recommendations
+async function loadRecommendations() {
+  document.getElementById('loadingState').style.display = 'block';
+  document.getElementById('resultState').style.display = 'none';
+  state.apiWarning = '';
+
+  const strategyLabels = { center: '折中位置', nearA: '离A近', nearB: '离B近' };
+  document.getElementById('loadingSub').textContent =
+    `基于「${strategyLabels[state.strategy]}」,搜索适合约会的地点...`;
+
+  try {
+    // 地理编码 A、B
+    const [coordA, coordB] = await Promise.all([
+      geocode(state.locationA),
+      geocode(state.locationB)
+    ]);
+
+    if (!coordA || !coordB) {
+      throw new Error('无法解析位置,请检查地址是否正确');
+    }
+
+    state.coordsA = coordA;
+    state.coordsB = coordB;
+    state.targetCoords = calcTargetCoords(coordA, coordB);
+
+    // 并行搜索各个偏好
+    const prefList = state.selectedPrefs.slice(0, 4);
+    const allResults = await Promise.all(
+      prefList.map(pref =>
+        searchPlacesWithFallback(pref)
+          .then(rs => ({ pref, rs }))
+      )
+    );
+
+    let allPlaces = [];
+    const seen = new Set();
+    for (const { pref, rs } of allResults) {
+      for (const r of rs) {
+        if (!r.uid || seen.has(r.uid)) continue;
+        seen.add(r.uid);
+        allPlaces.push({ ...r, prefSource: pref, icon: r._prefIcon });
+      }
+    }
+
+    allPlaces = rankPlaces(allPlaces);
+    allPlaces = await refineNearSideByRoute(allPlaces);
+
+    state.recommendations = allPlaces.slice(0, 5);
+
+    // API 无结果时使用本地示例数据兜底
+    if (state.recommendations.length === 0) {
+      state.apiWarning = '百度地图没有在目标区域找到匹配地点，已展示本地示例结果。';
+      state.recommendations = getMockRecommendations();
+    }
+
+    renderRecommendations();
+  } catch (e) {
+    console.error('Load recommendations error:', e);
+    state.apiWarning = `百度地图实时搜索暂时失败（${e.message || '网络或浏览器拦截'}），已展示本地示例结果。`;
+    state.recommendations = getMockRecommendations();
+    renderRecommendations();
+  }
+
+  document.getElementById('loadingState').style.display = 'none';
+  document.getElementById('resultState').style.display = 'block';
+}
+
+// Mock recommendations fallback
+function getMockRecommendations() {
+  const mockPlaces = [
+    {
+      name: '浪漫花园西餐厅',
+      rating: '4.8⭐',
+      address: '北京市-朝阳区-CBD商圈-建国路108号',
+      lat: 39.9085, lng: 116.4635,
+      icon: '🍷',
+      reason: '位于双方折中位置,氛围浪漫,评分超高,是约会首选。'},
+    {
+      name: '星空露台咖啡馆',
+      rating: '4.6⭐',
+      address: '北京市-海淀区-中关村-丹棱街18号',
+      lat: 39.9845, lng: 116.3120,
+      icon: '☕',
+      reason: '夜景绝佳,私密性好,适合情侣聊天赏景。'},
+    {
+      name: '欢乐时光电玩城',
+      rating: '4.5⭐',
+      address: '北京市-朝阳区-望京-阜荣街望京国际商业中心3楼',
+      lat: 39.9892, lng: 116.4705,
+      icon: '🎮',
+      reason: '互动性强,游戏种类丰富,增加约会趣味性。'},
+    {
+      name: '湖畔时光茶餐厅',
+      rating: '4.7⭐',
+      address: '北京市-海淀区-西北旺-昆明湖东路21号',
+      lat: 39.9532, lng: 116.2845,
+      icon: '🍵',
+      reason: '环境优美,临湖而建,散步方便,适合悠闲约会。'},
+    {
+      name: '神秘剧本杀体验馆',
+      rating: '4.4⭐',
+      address: '北京市-朝阳区-三里屯-工人体育场北路4号院',
+      lat: 39.9355, lng: 116.4475,
+      icon: '🎭',
+      reason: '互动感强,增进默契,适合想尝试新鲜事物的情侣。'}
+  ];
+
+  // Filter based on selected preferences
+  let filtered = [...mockPlaces];
+  const prefSet = new Set(state.selectedPrefs);
+
+  if (prefSet.has('西餐厅')) {
+    filtered = [mockPlaces[0], ...filtered.filter(p => p.name !== '浪漫花园西餐厅')];
+  }
+  if (prefSet.has('奶茶咖啡店')) {
+    filtered = [mockPlaces[1], ...filtered.filter(p => p.name !== '星空露台咖啡馆')];
+  }
+  if (prefSet.has('电玩城')) {
+    filtered = [mockPlaces[2], ...filtered.filter(p => p.name !== '欢乐时光电玩城')];
+  }
+
+  return rankPlaces(filtered.map(p => ({
+    ...p,
+    location: { lat: p.lat, lng: p.lng }
+  }))).slice(0, 5);
+}
+
+// Render recommendations
+function renderRecommendations() {
+  const list = document.getElementById('recommendationList');
+  if (state.recommendations.length === 0) {
+    list.innerHTML = '<div class="error-msg">抱歉,暂无推荐结果,请尝试其他偏好</div>';
+    return;
+  }
+
+  const apiNote = state.apiWarning
+    ? `<div class="error-msg">${state.apiWarning}</div>`
+    : '<div class="api-note">已通过百度地图 Web 服务实时检索地点，避开 JS API 的 CORS 与加载限制。</div>';
+
+  list.innerHTML = apiNote + state.recommendations.map((place, i) => {
+    // Build detailed address: 北京市-石景山区-古城南路-14号楼底商
+    const province = place.province || '';
+    const city = place.city || '';
+    const area = place.area || '';
+    const address = place.address || place.address_detail?.street || '';
+    const detailedAddr = [province, city, area, address].filter(Boolean).join('-');
+
+    // Coordinates
+    const lat = place.location?.lat || place.nav_i_location?.lat || '';
+    const lng = place.location?.lng || place.navi_location?.lng || '';
+    const coordsStr = (lat && lng) ? `${parseFloat(lat).toFixed(6)}, ${parseFloat(lng).toFixed(6)}` : '';
+    const primarySide = state.strategy === 'nearB' ? 'B' : 'A';
+    const commuteAClass = primarySide === 'A' ? 'commute-pill primary' : 'commute-pill';
+    const commuteBClass = primarySide === 'B' ? 'commute-pill primary' : 'commute-pill';
+    const commuteAText = place.routeA ? `A 约 ${place.routeA.duration} 分钟` : `A 约 ${formatDistance(place.distA)}`;
+    const commuteBText = place.routeB ? `B 约 ${place.routeB.duration} 分钟` : `B 约 ${formatDistance(place.distB)}`;
+
+    return `
+    <div class="result-card" onclick="selectPlace(${i})" style="${i === 0 ? 'border-color: var(--pink);' : ''}">
+      ${i === 0 ? '<div style="font-size:12px;color:var(--pink);margin-bottom:8px;">⭐ 推荐首选</div>' : ''}
+      <div class="result-header">
+        <div class="result-icon">${place.icon || '📍'}</div>
+        <div>
+          <div class="result-name">${place.name}</div>
+          <div class="result-rating">${place.overall_rating ? place.overall_rating + '⭐' : (place.rating || '4.5⭐')}</div>
+        </div>
+      </div>
+      <div class="result-address">
+        <span>📍 ${detailedAddr}</span>
+        ${coordsStr ? `<span class="result-coords">📌 ${coordsStr}</span>` : ''}
+      </div>
+      <div class="result-commute">
+        <span class="${commuteAClass}">${commuteAText}</span>
+        <span class="${commuteBClass}">${commuteBText}</span>
+      </div>
+      <div class="result-reason">${place.reason || '综合评分高,适合约会'}</div>
+    </div>
+  `}).join('');
+
+  state.selectedPlace = state.recommendations[0];
+}
+
+// Select a place
+function selectPlace(index) {
+  state.selectedPlace = state.recommendations[index];
+  document.querySelectorAll('.result-card').forEach((card, i) => {
+    card.style.borderColor = i === index ? 'var(--pink)' : '#ffd6e7';
+  });
+}
+
+// Load routes
+async function loadRoutes() {
+  document.getElementById('routeLoadingState').style.display = 'block';
+  document.getElementById('routeResultState').style.display = 'none';
+  state.apiWarning = '';
+
+  try {
+    if (!state.selectedPlace) {
+      state.selectedPlace = state.recommendations[0];
+    }
+
+    const destLat = state.selectedPlace?.location?.lat || state.selectedPlace?.lat;
+    const destLng = state.selectedPlace?.location?.lng || state.selectedPlace?.lng;
+
+    if (destLat && destLng) {
+      state.coordsDest = { lat: parseFloat(destLat), lng: parseFloat(destLng) };
+    } else {
+      const destName = state.selectedPlace?.name || '';
+      const destCoords = destName ? await geocode(destName) : null;
+      state.coordsDest = destCoords || state.targetCoords || { lat: 39.9, lng: 116.4 };
+    }
+
+    const [routeA, routeB] = await Promise.all([
+      getTransitRoute(state.coordsA, state.coordsDest),
+      getTransitRoute(state.coordsB, state.coordsDest)
+    ]);
+
+    renderRoutes(routeA, routeB);
+  } catch (e) {
+    console.error('Route error:', e);
+    state.apiWarning = `百度地图路线规划暂时失败（${e.message || '网络或浏览器拦截'}），已展示估算路线。`;
+    renderRoutes(getMockRoute(state.locationA), getMockRoute(state.locationB));
+  }
+
+  document.getElementById('routeLoadingState').style.display = 'none';
+  document.getElementById('routeResultState').style.display = 'block';
+}
+
+// 公交路线规划（Web Service API + JSONP）
+async function getTransitRoute(from, to) {
+  if (!from || !to) return null;
+  try {
+    const data = await baiduApi('/direction/v2/transit', {
+      origin: `${from.lat},${from.lng}`,
+      destination: `${to.lat},${to.lng}`,
+      tactics_incity: 0,
+      coord_type: 'bd09ll'
+    });
+    if (data.result && Array.isArray(data.result.routes) && data.result.routes.length) {
+      const route = data.result.routes[0];
+      const durationMin = Math.round((route.duration || 0) / 60);
+      const distanceKm = Math.round((route.distance || 0) / 100) / 10;
+      // 提取关键换乘信息
+      let scheme = '公交/地铁换乘';
+      if (Array.isArray(route.steps) && route.steps.length) {
+        const transitNames = [];
+        for (const stepGroup of route.steps) {
+          const subSteps = Array.isArray(stepGroup) ? stepGroup : [stepGroup];
+          for (const s of subSteps) {
+            if (s.vehicle_info && s.vehicle_info.detail) {
+              const name = s.vehicle_info.detail.name;
+              if (name && !transitNames.includes(name)) transitNames.push(name);
+            }
+          }
+        }
+        if (transitNames.length) {
+          scheme = transitNames.slice(0, 3).join(' → ');
+        }
+      }
+      return { duration: durationMin || 30, distance: distanceKm || 5, scheme };
+    }
+    console.warn('[transit] failed:', data);
+    return null;
+  } catch (e) {
+    console.warn('[transit] error:', e);
+    return null;
+  }
+}
+
+// Get mock route
+function getMockRoute(fromLoc) {
+  return {
+    duration: Math.floor(Math.random() * 30) + 20,
+    distance: Math.floor(Math.random() * 15) + 5,
+    scheme: '地铁直达 + 步行'
+  };
+}
+
+// Render routes
+function renderRoutes(routeA, routeB) {
+  document.getElementById('routeALocation').textContent = state.locationA;
+  document.getElementById('routeBLocation').textContent = state.locationB;
+
+  const rA = routeA || getMockRoute(state.locationA);
+  const rB = routeB || getMockRoute(state.locationB);
+
+  document.getElementById('routeADetail').innerHTML = `🚇 ${rA.scheme} | 约 ${rA.duration} 分钟 | ${rA.distance} km`;
+  document.getElementById('routeBDetail').innerHTML = `🚇 ${rB.scheme} | 约 ${rB.duration} 分钟 | ${rB.distance} km`;
+
+  const strategyLabels = { center: '折中位置', nearA: '离A近', nearB: '离B近' };
+  const destLat = state.selectedPlace?.location?.lat || state.selectedPlace?.navi_location?.lat || '';
+  const destLng = state.selectedPlace?.location?.lng || state.selectedPlace?.navi_location?.lng || '';
+  const destCoordsStr = (destLat && destLng) ? `${parseFloat(destLat).toFixed(6)}, ${parseFloat(destLng).toFixed(6)}` : '';
+  const baiduMapUrl = (destLat && destLng)
+    ? `https://api.map.baidu.com/marker?location=${encodeURIComponent(`${destLat},${destLng}`)}&title=${encodeURIComponent(state.selectedPlace?.name || '约会地点')}&content=${encodeURIComponent(state.selectedPlace?.address || '')}&output=html`
+    : `https://map.baidu.com/search/${encodeURIComponent(state.selectedPlace?.name || '约会地点')}`;
+  const warning = state.apiWarning
+    ? `<div class="error-msg">${state.apiWarning}</div>`
+    : '<div class="api-note">路线由百度地图 Web 服务实时规划；如浏览器限制外部脚本，可点击下方链接在百度地图中查看。</div>';
+
+  document.getElementById('routeTransitInfo').innerHTML = `
+    ${warning}
+    <div class="route-section" style="background:var(--pink-light);">
+      <div style="font-size:14px;font-weight:600;color:var(--pink-deep);margin-bottom:10px;">
+        📍 目的地: ${state.selectedPlace?.name || '约会地点'}
+      </div>
+      <div style="font-size:13px;color:#666;line-height:1.8;">
+        <div>🗺️ 选址策略：<strong>${strategyLabels[state.strategy]}</strong></div>
+        <div>🕐 A 约 ${rA.duration} 分钟 | B 约 ${rB.duration} 分钟</div>
+        ${destCoordsStr ? `<div style="margin-top:4px;">📌 坐标: <span style="font-size:11px;color:#aaa;">${destCoordsStr}</span></div>` : ''}
+        <a class="route-link" href="${baiduMapUrl}" target="_blank" rel="noopener">在百度地图中打开目的地</a>
+        <div style="margin-top:8px;">💡 建议提前出发，预留足够的出行时间</div>
+      </div>
+    </div>
+  `;
+}
+
+// Restart
+function restart() {
+  state = {
+    locationA: '', locationB: '', strategy: 'center', selectedPrefs: [],
+    recommendations: [], selectedPlace: null,
+    coordsA: null, coordsB: null, coordsDest: null, targetCoords: null,
+    apiWarning: ''
+  };
+  document.getElementById('locationA').value = '';
+  document.getElementById('locationB').value = '';
+  document.querySelectorAll('.pref-item').forEach(el => el.classList.remove('selected'));
+  document.querySelectorAll('.strategy-card').forEach(card => {
+    card.classList.remove('selected');
+    card.querySelector('.strategy-check').textContent = '';
+  });
+  document.getElementById('strategy-center').classList.add('selected');
+  document.getElementById('strategy-center').querySelector('.strategy-check').textContent = '✓';
+  goToStep(1);
+}
+
+// Initialize
+document.addEventListener('DOMContentLoaded', () => {
+  ['locationA', 'locationB'].forEach(id => {
+    document.getElementById(id).addEventListener('input', () => {
+      const a = document.getElementById('locationA').value.trim();
+      const b = document.getElementById('locationB').value.trim();
+      document.getElementById('btnNext1').disabled = !(a && b);
+    });
+  });
+  document.getElementById('btnNext1').disabled = true;
+});
+</script>
+</body>
+</html>
