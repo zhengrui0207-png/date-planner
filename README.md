@@ -6,6 +6,7 @@
 
 H5 页面已支持直接使用：
 
+- Vercel: https://date-planner-three-sigma.vercel.app
 - 输入用户 A 和用户 B 的位置
 - 选择「折中位置」「离 A 近一点」或「离 B 近一点」
 - 选择公园、咖啡、电影、餐厅等约会偏好
