@@ -176,6 +176,107 @@
   .pref-section {
     margin-bottom: 24px;
   }
+  .pref-card-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    margin-bottom: 20px;
+  }
+  .pref-card-header p {
+    margin-bottom: 0 !important;
+  }
+  .random-butterfly {
+    width: 44px;
+    height: 44px;
+    border: none;
+    border-radius: 50%;
+    background: linear-gradient(145deg, #fff8d6, #ffb8df 55%, #cbb4ff);
+    box-shadow: 0 5px 0 rgba(191, 105, 198, 0.42), 0 0 18px rgba(255, 232, 163, 0.52);
+    cursor: pointer;
+    font-size: 24px;
+    line-height: 1;
+    position: relative;
+    transition: transform 0.18s, box-shadow 0.18s;
+    animation: butterflyFlutter 1.55s ease-in-out infinite;
+  }
+  .random-butterfly:hover {
+    transform: translateY(-2px) rotate(8deg);
+    box-shadow: 0 7px 0 rgba(191, 105, 198, 0.42), 0 0 24px rgba(255, 232, 163, 0.72);
+  }
+  .random-butterfly:active {
+    transform: translateY(4px) scale(0.9) rotate(-10deg);
+    box-shadow: 0 2px 0 rgba(191, 105, 198, 0.42), 0 0 14px rgba(255, 232, 163, 0.62);
+  }
+  .random-butterfly::before,
+  .random-butterfly::after {
+    content: "✦";
+    position: absolute;
+    color: #fff2a6;
+    opacity: 0;
+    pointer-events: none;
+    text-shadow: 0 0 10px rgba(255, 232, 163, 0.9);
+    animation: butterflySpark 1.55s ease-in-out infinite;
+  }
+  .random-butterfly::before {
+    right: -5px;
+    top: 2px;
+    font-size: 13px;
+  }
+  .random-butterfly::after {
+    left: -6px;
+    bottom: 5px;
+    font-size: 10px;
+    animation-delay: 0.45s;
+  }
+  .random-butterfly.clicked {
+    animation: butterflyClick 0.42s ease;
+  }
+  .random-butterfly.clicked::before {
+    content: "";
+    inset: -10px;
+    border: 2px solid rgba(255, 239, 163, 0.8);
+    border-radius: 50%;
+    animation: butterflyRipple 0.46s ease-out;
+  }
+  @keyframes butterflyFlutter {
+    0%, 100% { transform: translateY(0) rotate(-4deg); filter: brightness(1); }
+    45% { transform: translateY(-3px) rotate(7deg) scale(1.05); filter: brightness(1.08); }
+    70% { transform: translateY(1px) rotate(-2deg); }
+  }
+  @keyframes butterflySpark {
+    0%, 100% { opacity: 0; transform: scale(0.5) rotate(0deg); }
+    42% { opacity: 1; transform: scale(1.1) rotate(18deg); }
+    72% { opacity: 0.35; transform: scale(0.8) rotate(32deg); }
+  }
+  @keyframes butterflyClick {
+    0% { transform: scale(1) rotate(0deg); }
+    35% { transform: scale(0.86) rotate(-18deg); }
+    70% { transform: scale(1.18) rotate(12deg); }
+    100% { transform: scale(1) rotate(0deg); }
+  }
+  @keyframes butterflyRipple {
+    0% { opacity: 0.95; transform: scale(0.68); }
+    100% { opacity: 0; transform: scale(1.42); }
+  }
+  .flying-butterfly {
+    position: fixed;
+    z-index: 20;
+    left: 0;
+    top: 0;
+    pointer-events: none;
+    font-size: 28px;
+    filter: drop-shadow(0 0 10px rgba(255, 232, 163, 0.9));
+    transition: transform 0.9s cubic-bezier(.22,.9,.28,1.08);
+  }
+  .pref-item.random-target {
+    animation: sparklePick 0.72s ease;
+  }
+  @keyframes sparklePick {
+    0% { transform: scale(1); }
+    45% { transform: scale(1.08); box-shadow: 0 0 28px rgba(255, 232, 163, 0.8); }
+    100% { transform: scale(1); }
+  }
   .pref-title {
     font-size: 15px;
     color: var(--pink-deep);
@@ -492,6 +593,397 @@
   .location-summary strong {
     color: var(--pink-deep);
   }
+  .person-count-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 10px;
+  }
+  .person-count-option {
+    padding: 16px 10px;
+    background: var(--pink-light);
+    border: 2px solid transparent;
+    border-radius: 12px;
+    text-align: center;
+    cursor: pointer;
+    transition: all 0.3s;
+  }
+  .person-count-option.selected {
+    background: white;
+    border-color: var(--pink);
+    color: var(--pink-deep);
+    font-weight: 700;
+    box-shadow: 0 2px 10px rgba(255,107,157,0.2);
+  }
+  .person-count-number {
+    font-size: 24px;
+    margin-bottom: 4px;
+  }
+
+  /* Dreamy cartoon skin */
+  :root {
+    --pink-light: #fff1f8;
+    --pink: #ff7fbc;
+    --pink-deep: #cf3f8d;
+    --rose-soft: #ffd9ec;
+    --lavender: #bfa7ff;
+    --night: #24184f;
+    --night-2: #452b83;
+    --gold: #ffe8a3;
+    --ink: #3a275d;
+    --pink-gradient:
+      radial-gradient(circle at 18% 16%, rgba(255, 232, 163, 0.52) 0 2px, transparent 3px),
+      radial-gradient(circle at 76% 12%, rgba(255, 255, 255, 0.9) 0 1px, transparent 2px),
+      radial-gradient(circle at 88% 32%, rgba(255, 203, 227, 0.72) 0 2px, transparent 3px),
+      linear-gradient(180deg, #231544 0%, #563195 42%, #ff9aca 100%);
+    --pink-btn: linear-gradient(135deg, #ff78b8 0%, #ffa0ce 48%, #ffd0e8 100%);
+    --shadow: 0 14px 34px rgba(76, 31, 112, 0.22), 0 3px 0 rgba(255,255,255,0.72) inset;
+    --radius: 8px;
+  }
+
+  html {
+    background: #24184f;
+  }
+
+  body {
+    position: relative;
+    background: var(--pink-gradient);
+    color: var(--ink);
+  }
+
+  body::before {
+    content: "";
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    background:
+      radial-gradient(circle at 12% 24%, rgba(255,255,255,0.92) 0 1px, transparent 2px),
+      radial-gradient(circle at 28% 10%, rgba(255,232,163,0.95) 0 2px, transparent 3px),
+      radial-gradient(circle at 62% 18%, rgba(255,255,255,0.8) 0 1px, transparent 2px),
+      radial-gradient(circle at 82% 8%, rgba(255,232,163,0.9) 0 2px, transparent 3px),
+      radial-gradient(circle at 92% 44%, rgba(255,255,255,0.75) 0 1px, transparent 2px),
+      radial-gradient(circle at 22% 78%, rgba(255,232,163,0.95) 0 2px, transparent 3px),
+      radial-gradient(circle at 68% 72%, rgba(255,255,255,0.82) 0 1px, transparent 2px);
+    opacity: 0.95;
+  }
+
+  body::after {
+    content: "";
+    position: fixed;
+    left: -8%;
+    right: -8%;
+    bottom: -70px;
+    height: 180px;
+    pointer-events: none;
+    background:
+      radial-gradient(ellipse at 12% 68%, rgba(255, 238, 247, 0.88) 0 55px, transparent 57px),
+      radial-gradient(ellipse at 38% 74%, rgba(255, 218, 239, 0.88) 0 68px, transparent 70px),
+      radial-gradient(ellipse at 70% 70%, rgba(238, 222, 255, 0.86) 0 62px, transparent 64px),
+      radial-gradient(ellipse at 92% 78%, rgba(255, 239, 248, 0.86) 0 58px, transparent 60px);
+  }
+
+  .container {
+    position: relative;
+    z-index: 1;
+    max-width: 500px;
+    padding: 18px 16px 34px;
+  }
+
+  .header {
+    padding: 18px 0 12px;
+  }
+
+  .heart-icon {
+    width: 82px;
+    height: 82px;
+    margin: 0 auto 12px;
+    border: 2px solid rgba(255, 232, 163, 0.9);
+    border-radius: 50%;
+    background:
+      radial-gradient(circle at 62% 34%, #fff9cf 0 8px, transparent 9px),
+      radial-gradient(circle at 50% 54%, #fff4a8 0 21px, transparent 22px),
+      linear-gradient(145deg, rgba(255,255,255,0.3), rgba(255,145,199,0.48));
+    box-shadow: 0 0 0 7px rgba(255,255,255,0.18), 0 16px 32px rgba(27, 14, 67, 0.28);
+    color: transparent;
+    animation: floatMoon 3.2s ease-in-out infinite;
+    position: relative;
+  }
+
+  .heart-icon::before {
+    content: "✦";
+    position: absolute;
+    right: -10px;
+    top: 8px;
+    color: var(--gold);
+    font-size: 24px;
+    text-shadow: 0 0 12px rgba(255,232,163,0.9);
+  }
+
+  .heart-icon::after {
+    content: "☾";
+    position: absolute;
+    left: 20px;
+    top: 14px;
+    color: #39275e;
+    font-size: 42px;
+    transform: rotate(-12deg);
+  }
+
+  @keyframes floatMoon {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-7px); }
+  }
+
+  .header h1 {
+    color: #fff9d8;
+    font-size: 30px;
+    text-shadow: 0 0 10px rgba(255, 244, 184, 0.82), 0 3px 0 rgba(115, 50, 126, 0.34);
+  }
+
+  .header p {
+    display: inline-block;
+    padding: 7px 12px;
+    color: #ffe8f5;
+    background: rgba(49, 28, 91, 0.42);
+    border: 1px solid rgba(255, 232, 163, 0.32);
+    border-radius: 999px;
+    text-shadow: 0 1px 4px rgba(39, 18, 76, 0.35);
+  }
+
+  .step-indicator {
+    gap: 7px;
+    margin: 14px 0 18px;
+  }
+
+  .step-dot {
+    width: 9px;
+    height: 9px;
+    background: rgba(255,255,255,0.48);
+    border: 1px solid rgba(255,232,163,0.48);
+    box-shadow: 0 0 10px rgba(255, 238, 177, 0.35);
+  }
+
+  .step-dot.active {
+    width: 28px;
+    background: linear-gradient(90deg, #fff1a8, #ff8cc4);
+    box-shadow: 0 0 16px rgba(255, 226, 142, 0.75);
+  }
+
+  .step-dot.done {
+    background: #ffb8d9;
+  }
+
+  .card,
+  .result-card,
+  .route-section {
+    background: linear-gradient(180deg, rgba(255,255,255,0.96), rgba(255,240,248,0.92));
+    border: 2px solid rgba(255,255,255,0.9);
+    border-radius: var(--radius);
+    box-shadow: var(--shadow);
+    position: relative;
+    overflow: hidden;
+  }
+
+  .card::before,
+  .result-card::before,
+  .route-section::before {
+    content: "✦";
+    position: absolute;
+    right: 14px;
+    top: 10px;
+    color: rgba(255, 186, 219, 0.7);
+    font-size: 18px;
+  }
+
+  .card > p,
+  .screen p {
+    color: #6f4b88 !important;
+    font-weight: 700;
+  }
+
+  .input-group label,
+  .pref-title,
+  .strategy-name,
+  .result-name {
+    color: var(--pink-deep);
+  }
+
+  .input-group input {
+    background: #fffaff;
+    border: 2px solid #ffd1e8;
+    border-radius: var(--radius);
+    color: var(--ink);
+    box-shadow: 0 3px 0 rgba(255, 216, 235, 0.65);
+  }
+
+  .input-group input:focus {
+    border-color: #ff89c2;
+    box-shadow: 0 0 0 4px rgba(255, 137, 194, 0.2), 0 3px 0 rgba(255, 216, 235, 0.65);
+  }
+
+  .input-group .hint,
+  .strategy-desc,
+  .result-address,
+  .route-label,
+  .loading-sub {
+    color: #8a73a0;
+  }
+
+  .btn {
+    border: 2px solid rgba(255,255,255,0.86);
+    border-radius: var(--radius);
+    background: var(--pink-btn);
+    color: #7c265b;
+    text-shadow: 0 1px 0 rgba(255,255,255,0.55);
+    box-shadow: 0 8px 0 #db5a9a, 0 18px 30px rgba(71, 31, 97, 0.28);
+  }
+
+  .btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 10px 0 #db5a9a, 0 22px 34px rgba(71, 31, 97, 0.3);
+  }
+
+  .btn:active {
+    transform: translateY(5px);
+    box-shadow: 0 3px 0 #db5a9a, 0 10px 22px rgba(71, 31, 97, 0.22);
+  }
+
+  .btn:disabled {
+    background: linear-gradient(135deg, #d8cde2, #f1e8f3);
+    color: #9d8dac;
+    box-shadow: 0 5px 0 #bbaecb;
+  }
+
+  .btn-secondary {
+    background: linear-gradient(180deg, #fffaff, #ffe7f3);
+    color: var(--pink-deep);
+    border-color: #ffc6e1;
+    box-shadow: 0 6px 0 #f2a6cd, 0 14px 24px rgba(71, 31, 97, 0.16);
+  }
+
+  .person-count-option,
+  .pref-item,
+  .strategy-card,
+  .route-user {
+    background: linear-gradient(180deg, #fff9fd, #ffe7f3);
+    border: 2px solid #ffd0e7;
+    border-radius: var(--radius);
+    box-shadow: 0 4px 0 rgba(255, 181, 218, 0.72);
+  }
+
+  .person-count-option:hover,
+  .pref-item:hover,
+  .strategy-card:hover {
+    border-color: #ff8cc4;
+    transform: translateY(-2px);
+  }
+
+  .person-count-option.selected,
+  .pref-item.selected,
+  .strategy-card.selected {
+    background: linear-gradient(180deg, #fffdf2, #ffd8ec);
+    border-color: #ff80bd;
+    color: var(--pink-deep);
+    box-shadow: 0 5px 0 #f5a1cb, 0 0 18px rgba(255, 218, 118, 0.36);
+  }
+
+  .person-count-number {
+    color: #7d4ad6;
+    font-size: 44px;
+    line-height: 1;
+    margin-bottom: 0;
+    text-shadow: 0 0 8px rgba(255,232,163,0.8);
+  }
+
+  .pref-title {
+    border-left: none;
+    padding-left: 0;
+  }
+
+  .pref-title::before {
+    content: "✧ ";
+    color: var(--gold);
+    text-shadow: 0 0 8px rgba(255,232,163,0.75);
+  }
+
+  .strategy-icon,
+  .result-icon,
+  .route-avatar {
+    background: linear-gradient(145deg, #ffe6f4, #ffb8db 48%, #c8adff);
+    border: 2px solid rgba(255,255,255,0.86);
+    box-shadow: 0 5px 0 rgba(184, 108, 198, 0.38);
+  }
+
+  .strategy-check {
+    border-color: #ffc6e1;
+    background: rgba(255,255,255,0.62);
+  }
+
+  .strategy-card.selected .strategy-check {
+    background: linear-gradient(145deg, #ffeaa7, #ff8cc4);
+    border-color: #fff4bd;
+    color: #7c265b;
+  }
+
+  .result-card {
+    cursor: pointer;
+  }
+
+  .result-rating {
+    color: #c68a14;
+  }
+
+  .commute-pill {
+    background: #fff8fc;
+    border-color: #ffd0e7;
+    color: #6f4b88;
+  }
+
+  .commute-pill.primary {
+    background: #fff5c8;
+    border-color: #ffd978;
+    color: #9a4e17;
+  }
+
+  .result-reason,
+  .error-msg,
+  .location-summary {
+    background: linear-gradient(180deg, #fff8fc, #ffeaf5);
+    border: 1px solid #ffd0e7;
+    color: var(--pink-deep);
+    border-radius: var(--radius);
+  }
+
+  .route-avatar {
+    color: #fffef5;
+    text-shadow: 0 1px 4px rgba(70, 26, 88, 0.38);
+  }
+
+  .route-detail,
+  .route-link,
+  .loading-text {
+    color: var(--pink-deep);
+  }
+
+  .loading-icon {
+    filter: drop-shadow(0 0 12px rgba(255, 232, 163, 0.65));
+  }
+
+  .footer-tip {
+    color: #fff1fb;
+    text-shadow: 0 1px 6px rgba(44, 22, 81, 0.5);
+  }
+
+  @media (max-width: 380px) {
+    .person-count-grid {
+      grid-template-columns: 1fr;
+    }
+    .header h1 {
+      font-size: 26px;
+    }
+    .card {
+      padding: 20px 16px;
+    }
+  }
 </style>
 </head>
 <body>
@@ -508,73 +1000,60 @@
     <div class="step-dot" id="dot3"></div>
     <div class="step-dot" id="dot4"></div>
     <div class="step-dot" id="dot5"></div>
+    <div class="step-dot" id="dot6"></div>
   </div>
 
-  <!-- Step 1: Location Input -->
+  <!-- Step 1: Person Count -->
   <div class="screen active" id="screen1">
     <div class="card">
-      <div class="input-group">
-        <label>👤 用户A 的位置</label>
-        <input type="text" id="locationA" placeholder="例如:北京市石景山区古城" />
-        <div class="hint">输入城市、区县或具体地址</div>
-      </div>
-      <div class="input-group">
-        <label>👤 用户B 的位置</label>
-        <input type="text" id="locationB" placeholder="例如:北京市朝阳区望京南" />
-        <div class="hint">输入城市、区县或具体地址</div>
+      <p style="font-size:15px;color:#888;margin-bottom:16px;">👥 这次有几个人一起约会？</p>
+      <div class="person-count-grid">
+        <div class="person-count-option selected" data-count="2" onclick="selectPeopleCount(2)">
+          <div class="person-count-number">2</div>
+        </div>
+        <div class="person-count-option" data-count="3" onclick="selectPeopleCount(3)">
+          <div class="person-count-number">3</div>
+        </div>
+        <div class="person-count-option" data-count="4" onclick="selectPeopleCount(4)">
+          <div class="person-count-number">4</div>
+        </div>
       </div>
     </div>
     <button class="btn" id="btnNext1" onclick="goToStep(2)">下一步 →</button>
   </div>
 
-  <!-- Step 2: Meeting Point Strategy -->
+  <!-- Step 2: Location Input -->
   <div class="screen" id="screen2">
+    <div class="card">
+      <p style="font-size:15px;color:#888;margin-bottom:16px;">📍 输入每个人的位置</p>
+      <div id="locationInputs"></div>
+    </div>
+    <button class="btn btn-secondary" onclick="goToStep(1)">← 上一步</button>
+    <button class="btn" id="btnNext2" onclick="goToStep(3)" style="margin-top:12px;">下一步 →</button>
+  </div>
+
+  <!-- Step 3: Meeting Point Strategy -->
+  <div class="screen" id="screen3">
     <div class="card">
       <p style="font-size:15px;color:#888;margin-bottom:6px;">📍 约会地点偏向</p>
       <p style="font-size:13px;color:#aaa;margin-bottom:16px;">选择约会地点的参考基准</p>
 
-      <div class="location-summary" id="locationSummary">
-        用户A: <strong id="summaryA"></strong><br>
-        用户B: <strong id="summaryB"></strong>
-      </div>
+      <div class="location-summary" id="locationSummary"></div>
 
-      <div class="strategy-cards">
-        <div class="strategy-card selected" id="strategy-center" onclick="selectStrategy('center')">
-          <div class="strategy-icon">🎯</div>
-          <div class="strategy-text">
-            <div class="strategy-name">折中位置</div>
-            <div class="strategy-desc">选在两人之间的中间点,双方路程最均衡</div>
-          </div>
-          <div class="strategy-check">✓</div>
-        </div>
-
-        <div class="strategy-card" id="strategy-nearA" onclick="selectStrategy('nearA')">
-          <div class="strategy-icon">🚶‍♂️</div>
-          <div class="strategy-text">
-            <div class="strategy-name">离 A 近一点</div>
-            <div class="strategy-desc">A 少走一点路,B 多走一点,更照顾 A 的时间</div>
-          </div>
-          <div class="strategy-check"></div>
-        </div>
-
-        <div class="strategy-card" id="strategy-nearB" onclick="selectStrategy('nearB')">
-          <div class="strategy-icon">🚶‍♀️</div>
-          <div class="strategy-text">
-            <div class="strategy-name">离 B 近一点</div>
-            <div class="strategy-desc">B 少走一点路,A 多走一点,更照顾 B 的时间</div>
-          </div>
-          <div class="strategy-check"></div>
-        </div>
+      <div class="strategy-cards" id="strategyCards">
       </div>
     </div>
-    <button class="btn btn-secondary" onclick="goToStep(1)">← 上一步</button>
-    <button class="btn" onclick="goToStep(3)" style="margin-top:12px;">下一步 →</button>
+    <button class="btn btn-secondary" onclick="goToStep(2)">← 上一步</button>
+    <button class="btn" onclick="goToStep(4)" style="margin-top:12px;">下一步 →</button>
   </div>
 
-  <!-- Step 3: Preference -->
-  <div class="screen" id="screen3">
+  <!-- Step 4: Preference -->
+  <div class="screen" id="screen4">
     <div class="card">
-      <p style="font-size:15px;color:#888;margin-bottom:20px;">💝 选择你们喜欢的约会风格</p>
+      <div class="pref-card-header">
+        <p style="font-size:15px;color:#888;margin-bottom:20px;">💝 选择你们喜欢的约会风格</p>
+        <button class="random-butterfly" type="button" onclick="randomPickPreference()" aria-label="随机选择约会偏好">🦋</button>
+      </div>
 
       <div class="pref-section">
         <div class="pref-title">一、轻松日常款</div>
@@ -610,12 +1089,12 @@
         </div>
       </div>
     </div>
-    <button class="btn btn-secondary" onclick="goToStep(2)">← 上一步</button>
-    <button class="btn" id="btnNext3" onclick="goToStep(4)" style="margin-top:12px;">开始推荐 →</button>
+    <button class="btn btn-secondary" onclick="goToStep(3)">← 上一步</button>
+    <button class="btn" id="btnNext4" onclick="goToStep(5)" style="margin-top:12px;">开始推荐 →</button>
   </div>
 
-  <!-- Step 4: Loading/Results -->
-  <div class="screen" id="screen4">
+  <!-- Step 5: Loading/Results -->
+  <div class="screen" id="screen5">
     <div id="loadingState">
       <div class="loading">
         <div class="loading-icon">🔍</div>
@@ -625,39 +1104,24 @@
     </div>
     <div id="resultState" style="display:none;">
       <div id="recommendationList"></div>
-      <button class="btn btn-secondary" onclick="goToStep(3)" style="margin-top:16px;">← 重新选择</button>
-      <button class="btn" id="btnNext4" onclick="goToStep(5)" style="margin-top:12px;">查看路线 →</button>
+      <button class="btn btn-secondary" onclick="goToStep(4)" style="margin-top:16px;">← 重新选择</button>
+      <button class="btn" id="btnNext5" onclick="goToStep(6)" style="margin-top:12px;">查看路线 →</button>
     </div>
   </div>
 
-  <!-- Step 5: Route Planning -->
-  <div class="screen" id="screen5">
+  <!-- Step 6: Route Planning -->
+  <div class="screen" id="screen6">
     <div id="routeLoadingState">
       <div class="loading">
         <div class="loading-icon">🗺️</div>
         <div class="loading-text">正在规划路线...</div>
-        <div class="loading-sub">计算双方的出行方案</div>
+        <div class="loading-sub">计算所有人的出行方案</div>
       </div>
     </div>
     <div id="routeResultState" style="display:none;">
-      <div class="route-user">
-        <div class="route-avatar">A</div>
-        <div class="route-info">
-          <div class="route-label">用户A 出发</div>
-          <div class="route-value" id="routeALocation"></div>
-          <div class="route-detail" id="routeADetail"></div>
-        </div>
-      </div>
-      <div class="route-user">
-        <div class="route-avatar">B</div>
-        <div class="route-info">
-          <div class="route-label">用户B 出发</div>
-          <div class="route-value" id="routeBLocation"></div>
-          <div class="route-detail" id="routeBDetail"></div>
-        </div>
-      </div>
+      <div id="routeUserList"></div>
       <div id="routeTransitInfo"></div>
-      <button class="btn btn-secondary" onclick="goToStep(4)" style="margin-top:16px;">← 查看其他推荐</button>
+      <button class="btn btn-secondary" onclick="goToStep(5)" style="margin-top:16px;">← 查看其他推荐</button>
       <button class="btn" onclick="restart()" style="margin-top:12px;">🔄 重新开始</button>
     </div>
   </div>
@@ -758,18 +1222,120 @@ function normalizeLocation(loc) {
 
 // State
 let state = {
-  locationA: '',
-  locationB: '',
-  strategy: 'center', // 'center' | 'nearA' | 'nearB'
+  peopleCount: 2,
+  people: [
+    { label: 'A', location: '', coords: null },
+    { label: 'B', location: '', coords: null }
+  ],
+  strategy: 'center',
   selectedPrefs: [],
   recommendations: [],
   selectedPlace: null,
-  coordsA: null,
-  coordsB: null,
   coordsDest: null,
   targetCoords: null,
+  searchRegion: '',
   apiWarning: ''
 };
+
+const PERSON_LABELS = ['A', 'B', 'C', 'D'];
+const CITY_ALIASES = [
+  ['北京', '北京市'], ['上海', '上海市'], ['天津', '天津市'], ['重庆', '重庆市'],
+  ['苏州', '苏州市'], ['杭州', '杭州市'], ['南京', '南京市'], ['广州', '广州市'],
+  ['深圳', '深圳市'], ['成都', '成都市'], ['武汉', '武汉市'], ['西安', '西安市'],
+  ['长沙', '长沙市'], ['郑州', '郑州市'], ['青岛', '青岛市'], ['厦门', '厦门市']
+];
+
+function createPeople(count) {
+  return PERSON_LABELS.slice(0, count).map((label, i) => ({
+    label,
+    location: state.people[i]?.location || '',
+    coords: state.people[i]?.coords || null
+  }));
+}
+
+function selectPeopleCount(count) {
+  state.peopleCount = count;
+  state.people = createPeople(count);
+  if (state.strategy !== 'center') {
+    const nearIndex = getNearPersonIndex();
+    if (nearIndex >= count) state.strategy = 'center';
+  }
+  document.querySelectorAll('.person-count-option').forEach(option => {
+    option.classList.toggle('selected', Number(option.dataset.count) === count);
+  });
+}
+
+function renderLocationInputs() {
+  const box = document.getElementById('locationInputs');
+  box.innerHTML = state.people.map(person => `
+    <div class="input-group">
+      <label>👤 用户${person.label} 的位置</label>
+      <input type="text" id="location${person.label}" value="${person.location}" placeholder="例如:北京市石景山区古城" />
+      <div class="hint">输入城市、区县或具体地址</div>
+    </div>
+  `).join('');
+  state.people.forEach(person => {
+    document.getElementById('location' + person.label).addEventListener('input', updateLocationNextState);
+  });
+  updateLocationNextState();
+}
+
+function updateLocationNextState() {
+  const filled = state.people.every(person => {
+    const input = document.getElementById('location' + person.label);
+    return input && input.value.trim();
+  });
+  const btn = document.getElementById('btnNext2');
+  if (btn) btn.disabled = !filled;
+}
+
+function syncPeopleLocations() {
+  for (const person of state.people) {
+    const input = document.getElementById('location' + person.label);
+    person.location = input ? input.value.trim() : person.location;
+    person.coords = null;
+  }
+  if (state.people.some(person => !person.location)) {
+    alert('请输入所有人的位置信息');
+    return false;
+  }
+  return true;
+}
+
+function renderLocationSummary() {
+  document.getElementById('locationSummary').innerHTML = state.people
+    .map(person => `用户${person.label}: <strong>${person.location}</strong>`)
+    .join('<br>');
+}
+
+function renderStrategyCards() {
+  const cards = [
+    `
+      <div class="strategy-card ${state.strategy === 'center' ? 'selected' : ''}" id="strategy-center" onclick="selectStrategy('center')">
+        <div class="strategy-icon">🎯</div>
+        <div class="strategy-text">
+          <div class="strategy-name">折中位置</div>
+          <div class="strategy-desc">选在所有人之间的中心点,整体路程更均衡</div>
+        </div>
+        <div class="strategy-check">${state.strategy === 'center' ? '✓' : ''}</div>
+      </div>
+    `,
+    ...state.people.map(person => {
+      const key = 'near' + person.label;
+      return `
+        <div class="strategy-card ${state.strategy === key ? 'selected' : ''}" id="strategy-${key}" onclick="selectStrategy('${key}')">
+          <div class="strategy-icon">🚶‍♀️</div>
+          <div class="strategy-text">
+            <div class="strategy-name">离 ${person.label} 近一点</div>
+            <div class="strategy-desc">${person.label} 少走一点路,更照顾 ${person.label} 的时间</div>
+          </div>
+          <div class="strategy-check">${state.strategy === key ? '✓' : ''}</div>
+        </div>
+      `;
+    })
+  ];
+  document.getElementById('strategyCards').innerHTML = cards.join('');
+}
 
 // Strategy selection
 function selectStrategy(strategy) {
@@ -783,35 +1349,64 @@ function selectStrategy(strategy) {
   selectedCard.querySelector('.strategy-check').textContent = '✓';
 }
 
+function getStrategyLabels() {
+  return {
+    center: '折中位置',
+    ...Object.fromEntries(state.people.map(person => ['near' + person.label, `离${person.label}近`]))
+  };
+}
+
 // Preference selection
 function togglePref(el) {
   el.classList.toggle('selected');
 }
 
+function randomPickPreference() {
+  const items = Array.from(document.querySelectorAll('#screen4 .pref-item'));
+  if (!items.length) return;
+
+  const button = document.querySelector('.random-butterfly');
+  button.classList.remove('clicked');
+  void button.offsetWidth;
+  button.classList.add('clicked');
+  setTimeout(() => button.classList.remove('clicked'), 460);
+
+  const target = items[Math.floor(Math.random() * items.length)];
+  const buttonRect = button.getBoundingClientRect();
+  const targetRect = target.getBoundingClientRect();
+  const butterfly = document.createElement('div');
+  butterfly.className = 'flying-butterfly';
+  butterfly.textContent = '🦋';
+  butterfly.style.transform = `translate(${buttonRect.left + buttonRect.width / 2 - 14}px, ${buttonRect.top + buttonRect.height / 2 - 14}px) rotate(0deg)`;
+  document.body.appendChild(butterfly);
+
+  target.classList.remove('random-target');
+  const animate = window.requestAnimationFrame || ((fn) => setTimeout(fn, 16));
+  animate(() => {
+    butterfly.style.transform = `translate(${targetRect.left + targetRect.width / 2 - 14}px, ${targetRect.top + targetRect.height / 2 - 14}px) rotate(720deg)`;
+  });
+
+  setTimeout(() => {
+    document.querySelectorAll('#screen4 .pref-item').forEach(item => item.classList.remove('selected'));
+    target.classList.add('selected', 'random-target');
+    butterfly.remove();
+    setTimeout(() => target.classList.remove('random-target'), 760);
+  }, 900);
+}
+
 // Step navigation
 function goToStep(step) {
   if (step === 2) {
-    state.locationA = document.getElementById('locationA').value.trim();
-    state.locationB = document.getElementById('locationB').value.trim();
-    if (!state.locationA || !state.locationB) {
-      alert('请输入双方的位置信息');
-      return;
-    }
-    // Update location summary
-    document.getElementById('summaryA').textContent = state.locationA;
-    document.getElementById('summaryB').textContent = state.locationB;
+    renderLocationInputs();
   }
 
   if (step === 3) {
-    state.locationA = document.getElementById('locationA').value.trim();
-    state.locationB = document.getElementById('locationB').value.trim();
-    if (!state.locationA || !state.locationB) {
-      alert('请输入双方的位置信息');
-      return;
-    }
+    if (!syncPeopleLocations()) return;
+    renderLocationSummary();
+    renderStrategyCards();
   }
 
-  if (step === 4) {
+  if (step === 5) {
     const selected = document.querySelectorAll('.pref-item.selected');
     if (selected.length === 0) {
       alert('请至少选择一个偏好类型');
@@ -830,14 +1425,14 @@ function goToStep(step) {
   });
 
   const titles = [
-    '', '输入你们的位置', '选择地点偏向', '选择约会偏好', '精选推荐', '规划出行路线'
+    '', '选择人数', '输入你们的位置', '选择地点偏向', '选择约会偏好', '精选推荐', '规划出行路线'
   ];
   document.getElementById('step-title').textContent = titles[step] || '';
 
-  if (step === 4) {
+  if (step === 5) {
     loadRecommendations();
   }
-  if (step === 5) {
+  if (step === 6) {
     loadRoutes();
   }
 }
@@ -845,11 +1440,17 @@ function goToStep(step) {
 // 从地址中提取城市名，提高地理编码与检索准确率
 function extractCity(address) {
   const m = address.match(/([\u4e00-\u9fa5]+?市)/);
-  return m ? m[1] : '';
+  if (m) return m[1];
+  const hit = CITY_ALIASES.find(([alias]) => address.includes(alias));
+  return hit ? hit[1] : '';
 }
 
 function getSearchCity() {
-  return extractCity(state.locationA) || extractCity(state.locationB) || '北京市';
+  for (const person of state.people) {
+    const city = extractCity(person.location);
+    if (city) return city;
+  }
+  return '北京市';
 }
 
 // 地理编码（Web Service API + JSONP）
@@ -869,27 +1470,55 @@ async function geocode(address) {
   }
 }
 
-// Calculate target coords based on strategy
-function calcTargetCoords(coordsA, coordsB) {
-  const s = state.strategy;
-  if (s === 'center') {
-    return {
-      lat: (coordsA.lat + coordsB.lat) / 2,
-      lng: (coordsA.lng + coordsB.lng) / 2
-    };
-  } else if (s === 'nearA') {
-    // 70% A, 30% B
-    return {
-      lat: coordsA.lat * 0.7 + coordsB.lat * 0.3,
-      lng: coordsA.lng * 0.7 + coordsB.lng * 0.3
-    };
-  } else {
-    // nearB: 30% A, 70% B
-    return {
-      lat: coordsA.lat * 0.3 + coordsB.lat * 0.7,
-      lng: coordsA.lng * 0.3 + coordsB.lng * 0.7
-    };
+async function reverseGeocode(coords) {
+  if (!coords) return null;
+  try {
+    const data = await baiduApi('/reverse_geocoding/v3/', {
+      location: `${coords.lat},${coords.lng}`,
+      coordtype: 'bd09ll',
+      extensions_poi: 0
+    });
+    return data.result?.addressComponent || null;
+  } catch (e) {
+    console.warn('[reverseGeocode] error:', coords, e);
+    return null;
   }
+}
+
+function getInputCities() {
+  return Array.from(new Set(state.people.map(person => extractCity(person.location)).filter(Boolean)));
+}
+
+function isCrossCityTrip() {
+  return getInputCities().length > 1;
+}
+
+function getNearPersonIndex() {
+  if (!state.strategy.startsWith('near')) return -1;
+  return PERSON_LABELS.indexOf(state.strategy.replace('near', ''));
+}
+
+function getCenterCoords(coordsList) {
+  return {
+    lat: coordsList.reduce((sum, item) => sum + item.lat, 0) / coordsList.length,
+    lng: coordsList.reduce((sum, item) => sum + item.lng, 0) / coordsList.length
+  };
+}
+
+// Calculate target coords based on strategy
+function calcTargetCoords(coordsList) {
+  const nearIndex = getNearPersonIndex();
+  if (nearIndex < 0 || !coordsList[nearIndex] || coordsList.length === 1) {
+    return getCenterCoords(coordsList);
+  }
+
+  const nearCoords = coordsList[nearIndex];
+  const otherCoords = coordsList.filter((_, i) => i !== nearIndex);
+  const othersCenter = getCenterCoords(otherCoords);
+  return {
+    lat: nearCoords.lat * 0.7 + othersCenter.lat * 0.3,
+    lng: nearCoords.lng * 0.7 + othersCenter.lng * 0.3
+  };
 }
 
 // 周边地点检索（Web Service API + JSONP）
@@ -899,7 +1528,7 @@ async function searchPlaces(query, lat, lng, radius = 3000) {
       query,
       location: `${lat},${lng}`,
       radius,
-      region: getSearchCity(),
+      region: state.searchRegion || undefined,
       radius_limit: true,
       scope: 2,
       page_size: 20,
@@ -933,24 +1562,18 @@ async function searchPlaces(query, lat, lng, radius = 3000) {
 }
 
 function getPlaceSearchCenters() {
-  if (state.strategy === 'nearA' && state.coordsA) {
+  const nearIndex = getNearPersonIndex();
+  const nearPerson = nearIndex >= 0 ? state.people[nearIndex] : null;
+  const wideRadii = isCrossCityTrip() ? [8000, 30000, 50000] : [3000, 8000, 20000];
+  if (nearPerson?.coords) {
     return [
-      { coords: state.coordsA, radius: 3000 },
-      { coords: state.coordsA, radius: 8000 },
-      { coords: state.targetCoords, radius: 8000 }
+      { coords: nearPerson.coords, radius: wideRadii[0] },
+      { coords: nearPerson.coords, radius: wideRadii[1] },
+      { coords: state.targetCoords, radius: wideRadii[1] },
+      { coords: state.targetCoords, radius: wideRadii[2] }
     ];
   }
-  if (state.strategy === 'nearB' && state.coordsB) {
-    return [
-      { coords: state.coordsB, radius: 3000 },
-      { coords: state.coordsB, radius: 8000 },
-      { coords: state.targetCoords, radius: 8000 }
-    ];
-  }
-  return [
-    { coords: state.targetCoords, radius: 3000 },
-    { coords: state.targetCoords, radius: 8000 }
-  ];
+  return wideRadii.map(radius => ({ coords: state.targetCoords, radius }));
 }
 
 // 带关键词映射、策略搜索中心与扩大半径的搜索
@@ -996,65 +1619,74 @@ function getRatingValue(place) {
 
 function enrichPlaceMetrics(place) {
   const loc = place.location || normalizeLocation({ lat: place.lat, lng: place.lng });
-  const distA = state.coordsA && loc
-    ? haversineDistance(state.coordsA.lat, state.coordsA.lng, loc.lat, loc.lng)
-    : Infinity;
-  const distB = state.coordsB && loc
-    ? haversineDistance(state.coordsB.lat, state.coordsB.lng, loc.lat, loc.lng)
-    : Infinity;
+  const distances = state.people.map(person => (
+    person.coords && loc
+      ? haversineDistance(person.coords.lat, person.coords.lng, loc.lat, loc.lng)
+      : Infinity
+  ));
   const targetDistance = state.targetCoords && loc
     ? haversineDistance(state.targetCoords.lat, state.targetCoords.lng, loc.lat, loc.lng)
     : Infinity;
-  const balanceGap = Math.abs(distA - distB);
-  return { ...place, location: loc, distA, distB, distance: targetDistance, balanceGap };
+  const finiteDistances = distances.filter(Number.isFinite);
+  const balanceGap = finiteDistances.length
+    ? Math.max(...finiteDistances) - Math.min(...finiteDistances)
+    : Infinity;
+  return {
+    ...place,
+    location: loc,
+    distances,
+    distA: distances[0],
+    distB: distances[1],
+    distance: targetDistance,
+    balanceGap
+  };
 }
 
 function getStrategyScore(place) {
   const ratingScore = getRatingValue(place) * 1.2;
-  if (state.strategy === 'nearA') {
-    return ratingScore - place.distA * 8 - place.distance * 0.6;
-  }
-  if (state.strategy === 'nearB') {
-    return ratingScore - place.distB * 8 - place.distance * 0.6;
+  const nearIndex = getNearPersonIndex();
+  if (nearIndex >= 0) {
+    return ratingScore - (place.distances?.[nearIndex] || Infinity) * 8 - place.distance * 0.6;
   }
   return ratingScore - place.distance * 5 - place.balanceGap * 1.5;
 }
 
 function buildPlaceReason(place) {
   if (place.reason) return place.reason;
-  if (state.strategy === 'nearA') {
-    if (place.routeA) {
-      return `优先照顾 A 的真实路线时间，A 约 ${place.routeA.duration} 分钟到达，B 距离约 ${formatDistance(place.distB)}。`;
+  const nearIndex = getNearPersonIndex();
+  if (nearIndex >= 0) {
+    const person = state.people[nearIndex];
+    const route = place.routes?.[nearIndex];
+    if (route) {
+      return `优先照顾 ${person.label} 的真实路线时间，${person.label} 约 ${route.duration} 分钟到达。`;
     }
-    return `优先照顾 A 的路程，A 距离约 ${formatDistance(place.distA)}，B 距离约 ${formatDistance(place.distB)}。`;
+    return `优先照顾 ${person.label} 的路程，${person.label} 距离约 ${formatDistance(place.distances?.[nearIndex])}。`;
   }
-  if (state.strategy === 'nearB') {
-    if (place.routeB) {
-      return `优先照顾 B 的真实路线时间，B 约 ${place.routeB.duration} 分钟到达，A 距离约 ${formatDistance(place.distA)}。`;
-    }
-    return `优先照顾 B 的路程，B 距离约 ${formatDistance(place.distB)}，A 距离约 ${formatDistance(place.distA)}。`;
-  }
-  return `更接近双方折中位置，A 距离约 ${formatDistance(place.distA)}，B 距离约 ${formatDistance(place.distB)}。`;
+  const distanceText = state.people
+    .map((person, i) => `${person.label} 约 ${formatDistance(place.distances?.[i])}`)
+    .join('，');
+  return `更接近所有人的折中位置，${distanceText}。`;
 }
 
 function rankPlaces(places) {
-  if (!state.coordsA || !state.coordsB) {
+  if (state.people.some(person => !person.coords)) {
     return places
       .map(p => ({ ...p, location: p.location || normalizeLocation({ lat: p.lat, lng: p.lng }) }))
-      .map(p => ({ ...p, distA: NaN, distB: NaN, distance: NaN, balanceGap: NaN }));
+      .map(p => ({ ...p, distances: [], distA: NaN, distB: NaN, distance: NaN, balanceGap: NaN }));
   }
 
   return places
     .map(enrichPlaceMetrics)
-    .filter(p => p.location && Number.isFinite(p.distA) && Number.isFinite(p.distB))
+    .filter(p => p.location && p.distances.every(Number.isFinite))
     .map(p => ({ ...p, strategyScore: getStrategyScore(p), reason: buildPlaceReason(p) }))
     .sort((a, b) => b.strategyScore - a.strategyScore);
 }
 
 async function refineNearSideByRoute(places) {
-  if (state.strategy !== 'nearA' && state.strategy !== 'nearB') return places;
+  const nearIndex = getNearPersonIndex();
+  if (nearIndex < 0) return places;
 
-  const origin = state.strategy === 'nearA' ? state.coordsA : state.coordsB;
+  const origin = state.people[nearIndex]?.coords;
   if (!origin) return places;
 
   const candidates = places.slice(0, 8);
@@ -1063,12 +1695,13 @@ async function refineNearSideByRoute(places) {
     try {
       const route = await getTransitRoute(origin, place.location);
       if (!route) return place;
-      const routeKey = state.strategy === 'nearA' ? 'routeA' : 'routeB';
+      const routes = [...(place.routes || [])];
+      routes[nearIndex] = route;
       return {
         ...place,
-        [routeKey]: route,
+        routes,
         primaryDuration: route.duration,
-        reason: buildPlaceReason({ ...place, [routeKey]: route })
+        reason: buildPlaceReason({ ...place, routes })
       };
     } catch (e) {
       console.warn('[route refine] failed:', place.name, e);
@@ -1091,25 +1724,26 @@ async function loadRecommendations() {
   document.getElementById('loadingState').style.display = 'block';
   document.getElementById('resultState').style.display = 'none';
   state.apiWarning = '';
+  state.searchRegion = '';
 
-  const strategyLabels = { center: '折中位置', nearA: '离A近', nearB: '离B近' };
+  const strategyLabels = getStrategyLabels();
   document.getElementById('loadingSub').textContent =
     `基于「${strategyLabels[state.strategy]}」,搜索适合约会的地点...`;
 
   try {
-    // 地理编码 A、B
-    const [coordA, coordB] = await Promise.all([
-      geocode(state.locationA),
-      geocode(state.locationB)
-    ]);
+    // 地理编码所有参与者
+    const coords = await Promise.all(state.people.map(person => geocode(person.location)));
 
-    if (!coordA || !coordB) {
+    if (coords.some(coord => !coord)) {
       throw new Error('无法解析位置,请检查地址是否正确');
     }
 
-    state.coordsA = coordA;
-    state.coordsB = coordB;
-    state.targetCoords = calcTargetCoords(coordA, coordB);
+    state.people.forEach((person, i) => {
+      person.coords = coords[i];
+    });
+    state.targetCoords = calcTargetCoords(coords);
+    const targetAddress = await reverseGeocode(state.targetCoords);
+    state.searchRegion = targetAddress?.city || targetAddress?.province || getSearchCity();
 
     // 并行搜索各个偏好
     const prefList = state.selectedPrefs.slice(0, 4);
@@ -1237,11 +1871,15 @@ function renderRecommendations() {
     const lat = place.location?.lat || place.nav_i_location?.lat || '';
     const lng = place.location?.lng || place.navi_location?.lng || '';
     const coordsStr = (lat && lng) ? `${parseFloat(lat).toFixed(6)}, ${parseFloat(lng).toFixed(6)}` : '';
-    const primarySide = state.strategy === 'nearB' ? 'B' : 'A';
-    const commuteAClass = primarySide === 'A' ? 'commute-pill primary' : 'commute-pill';
-    const commuteBClass = primarySide === 'B' ? 'commute-pill primary' : 'commute-pill';
-    const commuteAText = place.routeA ? `A 约 ${place.routeA.duration} 分钟` : `A 约 ${formatDistance(place.distA)}`;
-    const commuteBText = place.routeB ? `B 约 ${place.routeB.duration} 分钟` : `B 约 ${formatDistance(place.distB)}`;
+    const nearIndex = getNearPersonIndex();
+    const commuteItems = state.people.map((person, personIndex) => {
+      const route = place.routes?.[personIndex];
+      const text = route
+        ? `${person.label} 约 ${route.duration} 分钟`
+        : `${person.label} 约 ${formatDistance(place.distances?.[personIndex])}`;
+      const cls = nearIndex === personIndex ? 'commute-pill primary' : 'commute-pill';
+      return `<span class="${cls}">${text}</span>`;
+    }).join('');
 
     return `
     <div class="result-card" onclick="selectPlace(${i})" style="${i === 0 ? 'border-color: var(--pink);' : ''}">
@@ -1258,8 +1896,7 @@ function renderRecommendations() {
         ${coordsStr ? `<span class="result-coords">📌 ${coordsStr}</span>` : ''}
       </div>
       <div class="result-commute">
-        <span class="${commuteAClass}">${commuteAText}</span>
-        <span class="${commuteBClass}">${commuteBText}</span>
+        ${commuteItems}
       </div>
       <div class="result-reason">${place.reason || '综合评分高,适合约会'}</div>
     </div>
@@ -1298,16 +1935,15 @@ async function loadRoutes() {
       state.coordsDest = destCoords || state.targetCoords || { lat: 39.9, lng: 116.4 };
     }
 
-    const [routeA, routeB] = await Promise.all([
-      getTransitRoute(state.coordsA, state.coordsDest),
-      getTransitRoute(state.coordsB, state.coordsDest)
-    ]);
+    const routes = await Promise.all(
+      state.people.map(person => getTransitRoute(person.coords, state.coordsDest))
+    );
 
-    renderRoutes(routeA, routeB);
+    renderRoutes(routes);
   } catch (e) {
     console.error('Route error:', e);
     state.apiWarning = `百度地图路线规划暂时失败（${e.message || '网络或浏览器拦截'}），已展示估算路线。`;
-    renderRoutes(getMockRoute(state.locationA), getMockRoute(state.locationB));
+    renderRoutes(state.people.map(person => getMockRoute(person.location)));
   }
 
   document.getElementById('routeLoadingState').style.display = 'none';
@@ -1365,17 +2001,24 @@ function getMockRoute(fromLoc) {
 }
 
 // Render routes
-function renderRoutes(routeA, routeB) {
-  document.getElementById('routeALocation').textContent = state.locationA;
-  document.getElementById('routeBLocation').textContent = state.locationB;
+function renderRoutes(routes) {
+  const routeList = state.people.map((person, i) => {
+    const route = routes?.[i] || getMockRoute(person.location);
+    return { person, route };
+  });
 
-  const rA = routeA || getMockRoute(state.locationA);
-  const rB = routeB || getMockRoute(state.locationB);
+  document.getElementById('routeUserList').innerHTML = routeList.map(({ person, route }) => `
+    <div class="route-user">
+      <div class="route-avatar">${person.label}</div>
+      <div class="route-info">
+        <div class="route-label">用户${person.label} 出发</div>
+        <div class="route-value">${person.location}</div>
+        <div class="route-detail">🚇 ${route.scheme} | 约 ${route.duration} 分钟 | ${route.distance} km</div>
+      </div>
+    </div>
+  `).join('');
 
-  document.getElementById('routeADetail').innerHTML = `🚇 ${rA.scheme} | 约 ${rA.duration} 分钟 | ${rA.distance} km`;
-  document.getElementById('routeBDetail').innerHTML = `🚇 ${rB.scheme} | 约 ${rB.duration} 分钟 | ${rB.distance} km`;
-
-  const strategyLabels = { center: '折中位置', nearA: '离A近', nearB: '离B近' };
+  const strategyLabels = getStrategyLabels();
   const destLat = state.selectedPlace?.location?.lat || state.selectedPlace?.navi_location?.lat || '';
   const destLng = state.selectedPlace?.location?.lng || state.selectedPlace?.navi_location?.lng || '';
   const destCoordsStr = (destLat && destLng) ? `${parseFloat(destLat).toFixed(6)}, ${parseFloat(destLng).toFixed(6)}` : '';
@@ -1394,7 +2037,7 @@ function renderRoutes(routeA, routeB) {
       </div>
       <div style="font-size:13px;color:#666;line-height:1.8;">
         <div>🗺️ 选址策略：<strong>${strategyLabels[state.strategy]}</strong></div>
-        <div>🕐 A 约 ${rA.duration} 分钟 | B 约 ${rB.duration} 分钟</div>
+        <div>🕐 ${routeList.map(({ person, route }) => `${person.label} 约 ${route.duration} 分钟`).join(' | ')}</div>
         ${destCoordsStr ? `<div style="margin-top:4px;">📌 坐标: <span style="font-size:11px;color:#aaa;">${destCoordsStr}</span></div>` : ''}
         <a class="route-link" href="${baiduMapUrl}" target="_blank" rel="noopener">在百度地图中打开目的地</a>
         <div style="margin-top:8px;">💡 建议提前出发，预留足够的出行时间</div>
@@ -1406,33 +2049,28 @@ function renderRoutes(routeA, routeB) {
 // Restart
 function restart() {
   state = {
-    locationA: '', locationB: '', strategy: 'center', selectedPrefs: [],
+    peopleCount: 2,
+    people: [
+      { label: 'A', location: '', coords: null },
+      { label: 'B', location: '', coords: null }
+    ],
+    strategy: 'center',
+    selectedPrefs: [],
     recommendations: [], selectedPlace: null,
-    coordsA: null, coordsB: null, coordsDest: null, targetCoords: null,
+    coordsDest: null, targetCoords: null,
+    searchRegion: '',
     apiWarning: ''
   };
-  document.getElementById('locationA').value = '';
-  document.getElementById('locationB').value = '';
-  document.querySelectorAll('.pref-item').forEach(el => el.classList.remove('selected'));
-  document.querySelectorAll('.strategy-card').forEach(card => {
-    card.classList.remove('selected');
-    card.querySelector('.strategy-check').textContent = '';
+  document.querySelectorAll('.person-count-option').forEach(option => {
+    option.classList.toggle('selected', Number(option.dataset.count) === 2);
   });
-  document.getElementById('strategy-center').classList.add('selected');
-  document.getElementById('strategy-center').querySelector('.strategy-check').textContent = '✓';
+  document.querySelectorAll('.pref-item').forEach(el => el.classList.remove('selected'));
   goToStep(1);
 }
 
 // Initialize
 document.addEventListener('DOMContentLoaded', () => {
-  ['locationA', 'locationB'].forEach(id => {
-    document.getElementById(id).addEventListener('input', () => {
-      const a = document.getElementById('locationA').value.trim();
-      const b = document.getElementById('locationB').value.trim();
-      document.getElementById('btnNext1').disabled = !(a && b);
-    });
-  });
-  document.getElementById('btnNext1').disabled = true;
+  selectPeopleCount(2);
 });
 </script>
 </body>
